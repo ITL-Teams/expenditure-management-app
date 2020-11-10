@@ -50,7 +50,7 @@ Node stack:
 
 Containers:
 1. Go back to main directory
-2. Build example images: ``docker-compose -f docker-compose.example.build.yaml build``
+2. Build example images: ``docker-compose -f docker-compose.example.yaml build``
 3. Run containers: ``docker-compose -f docker-compose.example.yaml up``
 4. Wait about a minute, mysql container needs some time to start working properly.
 You can do this to ensure it is working:

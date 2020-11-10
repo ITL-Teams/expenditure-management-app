@@ -3,6 +3,7 @@ version: '3.2'
 services:
   api-gateway:
     image: itl-teams/api-gateway:latest
+    build: ./api/example
     container_name: api-gateway
     restart: unless-stopped
     ports:
@@ -10,6 +11,9 @@ services:
 
   node-example:
     image: itl-teams/node-example:dev
+    build:
+      context: ./services/node-example
+      dockerfile: Dockerfile.dev
     container_name: node-example
     restart: unless-stopped
     ports:
