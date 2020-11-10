@@ -1,0 +1,12 @@
+version: '3.2'
+
+services:
+  api-gateway:
+    build: ./api/example
+    image: itl-teams/api-gateway:latest
+
+  node-dev:
+    build:
+      context: ./services/node-example
+      dockerfile: Dockerfile.dev
+    image: itl-teams/node-example:dev

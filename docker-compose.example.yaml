@@ -1,0 +1,35 @@
+version: '3.2'
+
+services:
+  api-gateway:
+    image: itl-teams/api-gateway:latest
+    container_name: api-gateway
+    restart: unless-stopped
+    ports:
+      - "80:80"
+
+  node-example:
+    image: itl-teams/node-example:dev
+    container_name: node-example
+    restart: unless-stopped
+    ports:
+      - "8080:3000"
+    environment:
+      - APP_NAME=Example Node/Express App
+      - DEV_PORT=3000
+    env_file:
+      - 'example.env'
+    volumes:
+      - ./services/node-example/src:/home/app/src
+  
+  database-example:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql-example
+    restart: unless-stopped
+    expose:
+      - "3306"
+    volumes:
+      - ./services/mysql/example:/docker-entrypoint-initdb.d
+    env_file:
+      - 'example.env'
