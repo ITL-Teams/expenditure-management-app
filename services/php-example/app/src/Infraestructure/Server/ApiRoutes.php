@@ -21,3 +21,4 @@ class ApiRoutes {
 
 ApiRoutes::init();
 ApiRoutes::addRoute(['POST'], '/create', 'App\Infraestructure\Controller\CreateUser\UserCreatorController@handler');
+ApiRoutes::addRoute(['GET'], '/get/{userId}', 'App\Infraestructure\Controller\FindUser\UserFinderController@handler');

@@ -19,7 +19,23 @@ class MySqlUserRepository extends MySqlRepository implements IUserRepository {
   }
 
   public function get(UserId $id): ?User {
-    return null;
+    $connection = $this->getConnection();
+    $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE id = :id';
+    $query = $connection->prepare($sql);
+    $query->bindParam(':id', $id->toString());
+    $query->execute();
+    $user = $query -> fetchAll(\PDO::FETCH_OBJ);
+
+    if($user == null)
+      return null;
+    
+    $user = $user[0];
+    $user_name = explode(" ", $user->client_name);
+
+    return new User(
+      new UserName($user_name[0], $user_name[1]),
+      new UserId($user->id)
+    );
   }
 
   public function update(User $user): bool {
@@ -29,18 +45,6 @@ class MySqlUserRepository extends MySqlRepository implements IUserRepository {
   public function delete(UserId $id): bool {
     return false;
   }
-
-  // public function get(UserId $id): ?User {
-  //   $connection = $this->getConnection();
-  //   $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE id = :id';
-  //   $query = $connection->prepare($sql);
-  //   $query->bindParam(':id', $id->toString());
-  //   $query->execute();
-  //   $user = $query -> fetchAll(PDO::FETCH_OBJ);
-
-  //   if(!is_array($user) || sizeof($users) == 0)
-  //     return null;
-  // }
 
 }
 
