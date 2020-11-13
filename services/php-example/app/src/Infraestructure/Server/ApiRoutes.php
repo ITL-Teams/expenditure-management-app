@@ -20,4 +20,4 @@ class ApiRoutes {
 }
 
 ApiRoutes::init();
-ApiRoutes::addRoute(['GET'], '/{id}', 'App\Infraestructure\Controller\Test\TestController@handler');
+ApiRoutes::addRoute(['POST'], '/create', 'App\Infraestructure\Controller\CreateUser\UserCreatorController@handler');
