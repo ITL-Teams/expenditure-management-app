@@ -9,6 +9,19 @@ services:
     ports:
       - "80:80"
 
+  user-credentials:
+    image: itl-teams/node:latest
+    build: ./services/user-credentials
+    container_name: user-credentials
+    restart: unless-stopped
+    environment:
+      - APP_NAME=User Credentials
+      - PORT=80
+    env_file:
+      - ".env"
+    volumes:
+      - ./services/user-credentials/src:/home/app/src
+
   account-and-signature:
     container_name: account-and-signature
     restart: unless-stopped
