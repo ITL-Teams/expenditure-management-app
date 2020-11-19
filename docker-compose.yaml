@@ -10,7 +10,7 @@ services:
       - "80:80"
 
   user-credentials:
-    image: itl-teams/node:latest
+    image: itl-teams/user-credentials:latest
     build: ./services/user-credentials
     container_name: user-credentials
     restart: unless-stopped
