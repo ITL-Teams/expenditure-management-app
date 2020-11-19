@@ -3,33 +3,44 @@ version: "3.2"
 services:
   api-gateway:
     image: itl-teams/api-gateway:latest
-    build: ./api/example
+    build: ./api
     container_name: api-gateway
     restart: unless-stopped
     ports:
       - "80:80"
 
-  php-accountAndSignature:
-    container_name: php-accountAndSignature
+  user-credentials:
+    image: itl-teams/user-credentials:latest
+    build: ./services/user-credentials
+    container_name: user-credentials
+    restart: unless-stopped
+    environment:
+      - APP_NAME=User Credentials
+      - PORT=80
+    env_file:
+      - ".env"
+    volumes:
+      - ./services/user-credentials/src:/home/app/src
+
+  account-and-signature:
+    container_name: account-and-signature
     restart: unless-stopped
     image: itl-teams/php:latest
-    build: ./services/php-accountAndSignature
-    ports:
-      - "8081:80"
+    build: ./services/account-and-signature
     env_file:
-      - "example.env"
+      - ".env"
     volumes:
-      - ./services/php-accountAndSignature/public:/var/www/html
-      - ./services/php-accountAndSignature/app:/var/www/app
+      - ./services/account-and-signature/public:/var/www/html
+      - ./services/account-and-signature/app:/var/www/app
 
-  database-example:
+  database:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
-    container_name: mysql-example
+    container_name: database
     restart: unless-stopped
     expose:
       - "3306"
     volumes:
-      - ./services/mysql/example:/docker-entrypoint-initdb.d
+      - ./services/mysql:/docker-entrypoint-initdb.d
     env_file:
-      - "example.env"
+      - ".env"
