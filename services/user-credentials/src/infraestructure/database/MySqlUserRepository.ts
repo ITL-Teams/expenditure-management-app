@@ -8,6 +8,8 @@ import { UserAlreadyExists } from './error/UserAlreadyExists'
 import { UserId } from '../../domain/value-object/UserId'
 import { EnterpriseAccount } from '../../domain/value-object/EnterpriseAccount'
 import { TwoFactorAuth } from '../../domain/value-object/TwoFactorAuth'
+import { TwoFactor } from '../../domain/entity/TwoFactor'
+import { TwoFactorKey } from '../../domain/value-object/TwoFactorKey'
 
 export class MySqlUserRepository
   extends MySqlRepository
@@ -55,35 +57,23 @@ export class MySqlUserRepository
       new TwoFactorAuth(user.hasTwoFactorAuth !== null)
     )
   }
+
+  public async twoFactor(email: Email): Promise<TwoFactor> {
+    const connection = await this.getConnection()
+    const sql = `SELECT * FROM ${this.TABLE_NAME} WHERE email = ?`
+
+    let user = await connection.query(sql, [email.toString()]).catch((err) => {
+      throw new Error(err)
+    })
+
+    if (!Array.isArray(user) || user.length === 0) return null
+
+    user = user[0]
+
+    return new TwoFactor(
+      new UserId(user.id),
+      new TwoFactorKey(user.tfa_key),
+      new EnterpriseAccount(user.isEnterpriseAccount !== null)
+    )
+  }
 }
-
-//   const userName = users[0].client_name.split(' ')
-//   return new User(
-//     new UserName(userName[0], userName[1]),
-//     new UserId(users[0].id)
-//   )
-// }
-
-// public async update(user: User): Promise<boolean> {
-//   const connection = await this.getConnection()
-//   const sql = `UPDATE ${this.TABLE_NAME} SET client_name = ? WHERE id = ?`
-
-//   const response = await connection
-//     .query(sql, [user.getName().toString(), user.getId().toString()])
-//     .catch((err) => Promise.reject(err))
-
-//   const userUpdated = response.affectedRows !== 0
-//   return userUpdated
-// }
-
-// public async delete(id: UserId): Promise<boolean> {
-//   const connection = await this.getConnection()
-//   const sql = `DELETE FROM ${this.TABLE_NAME} WHERE id = ?`
-
-//   const response = await connection
-//     .query(sql, [id.toString()])
-//     .catch((err) => Promise.reject(err))
-
-//   const userDeleted = response.affectedRows !== 0
-//   return userDeleted
-// }
