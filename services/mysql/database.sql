@@ -12,10 +12,11 @@ CREATE TABLE user_credentials (
     user_signature      VARCHAR(255) NOT NULL,
     isEnterpriseAccount CHAR(0) DEFAULT NULL,
     hasTwoFactorAuth    CHAR(0) DEFAULT NULL,
+    tfa_key             VARCHAR(255) DEFAULT NULL,
     UNIQUE (email),
 
     PRIMARY KEY (id)
 );
 
 INSERT INTO user_credentials
-VALUES ('b76c4ae8-7abf-4eef-8ed4-498736b117f1', 'admin@ema.com', 'Admin', 'Admin', '$2a$08$KDLvCZiGRTTgJE1U7hJYkO/6SVMi4qYrg8NJowGc0QnjVVY0YA6qy', '', NULL, '');
+VALUES ('b76c4ae8-7abf-4eef-8ed4-498736b117f1', 'admin@ema.com', 'Admin', 'Admin', '$2a$08$KDLvCZiGRTTgJE1U7hJYkO/6SVMi4qYrg8NJowGc0QnjVVY0YA6qy', '', NULL, '', 'JBSWY3DPEHPK3PXP');
