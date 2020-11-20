@@ -8,7 +8,7 @@ use App\Domain\ValueObject\AccountId;
 class AccountMySqlRepository extends MySqlRepository implements IAccountRepository {
   private string $TABLE_NAME = 'user_credentials';
 
-  public function update(Account $account): void {
+  public function update(Account $account): bool {
     $connection = $this->getConnection();
     $sql = 'UPDATE '.$this->TABLE_NAME.' SET email=:email, firstName=:firstName, lastName=:lastName';
     if($account->getPassword()!=null)
@@ -28,7 +28,11 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
     if($account->getSignatureId()!=null)
         $query->bindParam(':signature', $account->getSignatureId()->toString());
 
-    $query->execute();
+    $response = $query->execute();
+
+    if($query->rowCount() < 1)
+      throw new \Exception('Invalid accout_id, or user data has not changed');
+
     return true;
   }
 

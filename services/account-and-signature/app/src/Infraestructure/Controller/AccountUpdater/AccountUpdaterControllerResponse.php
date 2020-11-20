@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Infraestructure\Controller\AccountUpdater;
 
 use \Exception;
@@ -11,41 +12,72 @@ use App\Application\AccountUpdater\AccountUpdater;
 use App\Application\AccountUpdater\AccountUpdaterRequest;
 use App\Domain\IAccountRepository;
 
-class AccountUpdaterControllerResponse extends ControllerResponse {  
+class AccountUpdaterControllerResponse extends ControllerResponse
+{
   private AccountUpdater $service;
 
-  public function init(IAccountRepository $repository): void {
+  public function init(IAccountRepository $repository): void
+  {
     $this->service = new AccountUpdater($repository);
   }
 
   public function toResponse(RequestInterface $request): ResponseInterface
-  {      
+  {
     $payload = $this->getPayload($request);
-
     try {
-      $this->validatePayload($payload);
+      $validations = [
+        [
+          "value_name" => 'email',
+          "value" => $payload->email,
+          "expected" => "string"
+        ],
+        [
+          "value_name" => 'firstName',
+          "value" => $payload->firstName,
+          "expected" => "string"
+        ],
+        [
+          "value_name" => 'lastName',
+          "value" => $payload->lastName,
+          "expected" => "string"
+        ]
+      ];
+      if ($payload->signature != null)
+        array_push($validations, [
+          "value_name" => 'signature',
+          "value" => $payload->signature,
+          "expected" => "string"
+        ]);
+
+      if ($payload->password != null)
+        array_push($validations, [
+          "value_name" => 'password',
+          "value" => $payload->password,
+          "expected" => "string"
+        ]);
+
+      $this->validatePayload($validations);
 
       $serviceRequest = new AccountUpdaterRequest();
-      $serviceRequest->accountId = $this->params->account_id;
+      $serviceRequest->accountId = $this->params->accountid;
       $serviceRequest->email = $payload->email;
       $serviceRequest->firstName = $payload->firstName;
       $serviceRequest->lastName = $payload->lastName;
-      $serviceRequest->passworod = $payload->password;
+      $serviceRequest->password = $payload->password;
       $serviceRequest->signature = $payload->signature;
       $account = $this->service->invoke($serviceRequest);
       $response = [
-          'account_id' => $account->accountId,
-          'email' => $payload->email,
-          'firstName' => $payload->firstName,
-          'lastName' => $payload->lastName
+        'account_id' => $account->accountId,
+        'email' => $payload->email,
+        'firstName' => $payload->firstName,
+        'lastName' => $payload->lastName
       ];
 
-      if($payload->signature!=null)
+      if ($payload->signature != null)
         $response['signature'] = $payload->signature;
 
       return new JsonResponse(['success' => $response]);
-
-    } catch(RequestException | Exception $exeption) {
+    } catch (RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
           'message' => 'Account was not updated',
@@ -55,28 +87,8 @@ class AccountUpdaterControllerResponse extends ControllerResponse {
     }
   }
 
-  public function validatePayload(object $payload): void {    
-    $this->validatePayloadBody([
-      [
-        "value_name" => 'accountId',
-        "value" => $payload->accountId,
-        "expected" => "string"
-      ],
-      [
-        "value_name" => 'email',
-        "value" => $payload->email,
-        "expected" => "string"
-      ],
-      [
-        "value_name" => 'firstName',
-        "value" => $payload->firstName,
-        "expected" => "string"
-      ],
-      [
-        "value_name" => 'lastName',
-        "value" => $payload->lastName,
-        "expected" => "string"
-      ]
-    ]);    
+  public function validatePayload(array $validations): void
+  {
+    $this->validatePayloadBody($validations);
   }
 }
