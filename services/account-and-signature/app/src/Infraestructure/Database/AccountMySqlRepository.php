@@ -28,7 +28,11 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
     if($account->getSignatureId()!=null)
         $query->bindParam(':signature', $account->getSignatureId()->toString());
 
-    $query->execute();
+    $response = $query->execute();
+
+    if($query->rowCount() < 1)
+      throw new \Exception('Invalid accout_id, or user data has not changed');
+
     return true;
   }
 
