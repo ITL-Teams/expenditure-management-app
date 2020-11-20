@@ -2,7 +2,7 @@
 
 namespace App\Domain\ValueObject;
 
-class Email extends StringValueObject
+class Email 
 {
     private string $email;
 
