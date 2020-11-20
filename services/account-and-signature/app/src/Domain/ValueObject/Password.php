@@ -13,6 +13,6 @@ class Password
 
     public function toString(): string
     {
-        return $this->firstName;
+        return $this->password;
     }
 }

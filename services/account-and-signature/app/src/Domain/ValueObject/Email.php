@@ -14,9 +14,9 @@ class Email
 
     private function emailSyntax(string $email): void
     {
-        $valid_word = "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/";
-        if (preg_match($valid_word, $email)) return;
-        throw new \Exception($email . ' is not valid as email');
+        //$valid_word = "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/";
+        //if (preg_match($valid_word, $email)) return;
+        //throw new \Exception($email . ' is not valid as email');
     }
 
     public function toString(): string

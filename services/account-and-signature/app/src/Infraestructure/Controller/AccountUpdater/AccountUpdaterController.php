@@ -5,7 +5,6 @@ use Rareloop\Router\RouteParams;
 use App\Infraestructure\Controller\Controller;
 use App\Infraestructure\Controller\ControllerResponse;
 use App\Infraestructure\Database\AccountMySqlRepository;
-use App\Domain\IAccountRepository;
 
 class AccountUpdaterController implements Controller {
 
