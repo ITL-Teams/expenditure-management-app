@@ -1,0 +1,1 @@
+<?php require_once "../app/src/index.php";
