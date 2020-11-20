@@ -1,5 +1,5 @@
 <?php
-namespace App\Infraestructure\Controller\CreateUser;
+namespace App\Infraestructure\Controller\CreateSignature;
 
 use Rareloop\Router\RouteParams;
 use App\Infraestructure\Controller\Controller;
@@ -12,8 +12,6 @@ class SignatureCreatorController implements Controller {
 
   public function handler(RouteParams $params): ControllerResponse {
     $response = new SignatureCreatorControllerResponse($params);
-    $response->init(new MySqlUserRepository());
     return $response;
   }
-
 }

@@ -11,10 +11,8 @@ class Signature {
   }
 
   private function generateId(): string {
-    $random = (float)rand() / (float)getrandmax() * 100;
-    settype($random, 'integer');
-    $date = new \DateTime();
-    return $date->getTimestamp() . $random;
+    $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return $signature->substr(str_shuffle($permitted_chars), 0, 20);
   }
 
   public function getId(): SignatureId {
