@@ -7,6 +7,6 @@ class AccountUpdaterResponse {
     public string $emai;
     public string $firstName;
     public string $lastName;
-    public string $signature;
+    public ?string $signature;
 
 }
