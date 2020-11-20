@@ -1,6 +1,7 @@
 import { ICredentialsRepository } from '../../domain/ICredentialsRepository'
 import { Email } from '../../domain/value-object/Email'
 import { Password } from '../../domain/value-object/Password'
+import { AccountNotVerified } from '../error/AccountNotVerified'
 import { CredentialsValidatorRequest } from './CredentialsValidatorRequest'
 import { CredentialsValidatorResponse } from './CredentialsValidatorResponse'
 
@@ -17,9 +18,17 @@ export class CredentialsValidator {
     const password = new Password(request.password, false)
     const loginUser = await this.repository.find(new Email(request.email))
 
-    if (loginUser === null) return { status: 'NOT_AUTHORIZED' }
-    if (!loginUser.getPassword().match(password))
-      return { status: 'NOT_AUTHORIZED' }
+    const failStatus: CredentialsValidatorResponse = {
+      status: 'NOT_AUTHORIZED'
+    }
+
+    if (loginUser === null) return failStatus
+    if (!loginUser.getPassword().match(password)) return failStatus
+
+    if (!loginUser.isAccountVerified().getValue())
+      throw new AccountNotVerified(
+        'This enterprise account has not been verified yet'
+      )
 
     return {
       status: loginUser.hasTwoFactorAuth().getValue()
