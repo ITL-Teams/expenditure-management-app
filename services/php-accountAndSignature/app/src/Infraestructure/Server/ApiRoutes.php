@@ -22,4 +22,4 @@ class ApiRoutes {
 ApiRoutes::init();
 ApiRoutes::addRoute(['POST'], '/create', 'App\Infraestructure\Controller\CreateSignature\SignatureCreatorController@handler');
 // ApiRoutes::addRoute(['GET'], '/get/{userId}', 'App\Infraestructure\Controller\FindUser\UserFinderController@handler');
-ApiRoutes::addRoute(['PUT'], '/account/update/{account_id}', 'App\Infraestructure\Controller\AccountUpdater\AccountUpdaterController@handler');
+ApiRoutes::addRoute(['PUT'], '/update/{account_id}', 'App\Infraestructure\Controller\AccountUpdater\AccountUpdaterController@handler');

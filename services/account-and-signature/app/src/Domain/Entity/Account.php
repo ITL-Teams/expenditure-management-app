@@ -22,15 +22,15 @@ class Account
         AccountId $accountId,
         FirstName $firstName,
         LastName $lastName,
-        Password $password,
         Email $email,
+        Password $password,
         SignatureId $signature
     ) {
         $this->accountId = $accountId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->password = $password;
         $this->email = $email;
+        $this->password = $password;
         $this->signature = $signature;
     }
 

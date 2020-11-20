@@ -1,7 +1,7 @@
 <?php
 namespace App\Domain\ValueObject;
 
-class FirstName extends StringValueObject {
+class FirstName {
     private string $firstName;
 
     public function __construct(string $firstName)
