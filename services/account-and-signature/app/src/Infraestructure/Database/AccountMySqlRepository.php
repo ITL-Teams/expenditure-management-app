@@ -5,6 +5,8 @@ namespace App\Infraestructure\Database;
 use App\Domain\IAccountRepository;
 use App\Domain\Entity\Account;
 use App\Domain\Entity\AccountFind;
+use App\Domain\Entity\ArrayOfEnterpriseAccountEntities;
+use App\Domain\Entity\EnterpriseAccountEntity;
 use App\Domain\ValueObject\AccountId;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\FirstName;
@@ -69,5 +71,33 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
       new SignatureId($account->user_signature),
       new EnterpriseAccount($account->isEnterpriseAccount != 'NULL')
     );
+  }
+
+  public function enterpriseFinder(): ArrayOfEnterpriseAccountEntities {
+    $accounts = new ArrayOfEnterpriseAccountEntities;
+
+    $connection = $this->getConnection();
+    $sql = 'SELECT * FROM ' . $this->TABLE_NAME . ' WHERE accountVerified IS NULL';
+
+    $query = $connection->prepare($sql);    
+    $query->execute();
+
+    $result = $query->fetchAll(\PDO::FETCH_OBJ);    
+    
+    if ($result == null)
+      return $accounts;
+
+    foreach($result as $account) {      
+      $accounts->addAccount(new EnterpriseAccountEntity(
+        new AccountId($account->id),
+        new Email($account->email),
+        new FirstName($account->firstName),
+        new LastName($account->lastName),
+        new SignatureId($account->user_signature),
+        new EnterpriseAccount($account->isEnterpriseAccount != 'NULL')
+      ));
+     }    
+
+    return $accounts;
   }
 }
