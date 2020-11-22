@@ -12,6 +12,8 @@ use App\Domain\ValueObject\LastName;
 use App\Domain\ValueObject\SignatureId;
 use App\Domain\ValueObject\EnterpriseAccount;
 
+use function PHPSTORM_META\type;
+
 class AccountMySqlRepository extends MySqlRepository implements IAccountRepository
 {
   private string $TABLE_NAME = 'user_credentials';
@@ -53,17 +55,19 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
     $query->bindParam(':id', $id->toString());
     $query->execute();
     $account = $query->fetchAll(\PDO::FETCH_OBJ);
-    var_dump($account);
-    if ($account == null)
+    
+    if (\is_array($account) && sizeof($account) < 1)
       return null;
 
+    $account = $account[0];
+    var_dump($account->isEnterpriseAccount != NULL);
     return new AccountFind(
       new AccountId($account->id),
       new FirstName($account->firstName),
       new LastName($account->lastName),
       new Email($account->email),
-      new SignatureId($account->user_signature)
-      //new EnterpriseAccount($account->enterprise_account)
+      new SignatureId($account->user_signature),
+      new EnterpriseAccount($account->isEnterpriseAccount != 'NULL')
     );
   }
 }
