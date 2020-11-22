@@ -33,7 +33,7 @@ class EnterpriseAccountFinderControllerResponse extends ControllerResponse
     } catch (RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
-          'message' => 'Account was not updated',
+          'message' => 'Account was not found',
           'reason' => $exeption->getMessage()
         ]
       ]);
