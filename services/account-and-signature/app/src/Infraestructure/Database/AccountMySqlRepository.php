@@ -62,14 +62,13 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
       return null;
 
     $account = $account[0];
-    var_dump($account->isEnterpriseAccount != NULL);
     return new AccountFind(
       new AccountId($account->id),
       new FirstName($account->firstName),
       new LastName($account->lastName),
       new Email($account->email),
       new SignatureId($account->user_signature),
-      new EnterpriseAccount($account->isEnterpriseAccount != 'NULL')
+      new EnterpriseAccount(!is_null($account->isEnterpriseAccount))
     );
   }
 
