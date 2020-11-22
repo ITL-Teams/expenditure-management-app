@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Infraestructure\Controller\CreateSignature;
 
 use \Exception;
@@ -8,35 +9,29 @@ use Zend\Diactoros\Response\JsonResponse;
 use App\Infraestructure\Controller\ControllerResponse;
 use App\Infraestructure\Controller\Exception\RequestException;
 use App\Application\CreateSignature\SignatureCreator;
-use App\Application\CreateSignature\SignatureCreatorRequest;
-use App\Domain\ISignatureRepository;
 
-class SignatureCreatorControllerResponse extends ControllerResponse {  
+class SignatureCreatorControllerResponse extends ControllerResponse
+{
   private SignatureCreator $service;
 
-  public function init(ISignatureRepository $repository): void {
-    $this->service = new SignatureCreator($repository);
+  public function init(): void
+  {
+    $this->service = new SignatureCreator();
   }
 
-  public function toResponse(RequestInterface $request): ResponseInterface
-  {      
-    $payload = $this->getPayload($request);
+  public function toResponse(RequestInterface $reques): ResponseInterface
+  {
 
     try {
-      $this->validatePayload($payload);
-
-      $serviceRequest = new SignatureCreatorRequest();
-      // values
-      $Signature = $this->service->invoke($serviceRequest);
+      $Signature = $this->service->invoke();
 
       return new JsonResponse([
         'success' => [
           'message' => 'Signature has been created',
-          'id' => $Signature->getId()->toString()
+          'id' => $Signature->signature->toString()
         ]
       ]);
-
-    } catch(RequestException | Exception $exeption) {
+    } catch (RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
           'message' => 'Signature was not created',
@@ -44,11 +39,5 @@ class SignatureCreatorControllerResponse extends ControllerResponse {
         ]
       ]);
     }
-  }
-
-  public function validatePayload(object $payload): void {    
-    $this->validatePayloadBody([
-      // values
-    ]);    
   }
 }
