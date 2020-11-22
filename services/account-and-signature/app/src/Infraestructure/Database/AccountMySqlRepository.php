@@ -44,7 +44,7 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
     $response = $query->execute();
 
     if ($query->rowCount() < 1)
-      throw new \Exception('Invalid accout_id, or user data has not changed');
+      throw new \Exception('Invalid account_id, or user data has not changed');
 
     return true;
   }
@@ -98,5 +98,23 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
      }    
 
     return $accounts;
+  }
+
+  public function verifyAccount(AccountId $accountId, bool $verify): void {
+    $connection = $this->getConnection();
+
+    if($verify)
+      $sql = 'UPDATE ' . $this->TABLE_NAME . " SET accountVerified = ''";
+    else
+      $sql = 'DELETE FROM ' . $this->TABLE_NAME;
+
+    $sql .= " WHERE id = :id and accountVerified IS NULL";
+
+    $query = $connection->prepare($sql);
+    $query->bindParam(':id', $accountId->toString());
+    $query->execute();
+
+    if ($query->rowCount() < 1)
+      throw new \Exception('Invalid account_id or account is already verified');
   }
 }
