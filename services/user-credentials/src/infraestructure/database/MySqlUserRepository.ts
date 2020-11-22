@@ -10,6 +10,7 @@ import { EnterpriseAccount } from '../../domain/value-object/EnterpriseAccount'
 import { TwoFactorAuth } from '../../domain/value-object/TwoFactorAuth'
 import { TwoFactor } from '../../domain/entity/TwoFactor'
 import { TwoFactorKey } from '../../domain/value-object/TwoFactorKey'
+import { AccountVerified } from '../../domain/value-object/AccountVerified'
 
 export class MySqlUserRepository
   extends MySqlRepository
@@ -19,8 +20,8 @@ export class MySqlUserRepository
   public async create(user: RegisterUser): Promise<void> {
     const connection = await this.getConnection()
     const sql = `INSERT INTO ${this.TABLE_NAME} 
-    (id,email,firstName,lastName,user_password,user_signature,isEnterpriseAccount,hasTwoFactorAuth)
-    VALUES (?,?,?,?,?,?,?,?)`
+    (id,email,firstName,lastName,user_password,user_signature,isEnterpriseAccount,accountVerified,hasTwoFactorAuth)
+    VALUES (?,?,?,?,?,?,?,?,?)`
 
     return connection
       .query(sql, [
@@ -31,6 +32,7 @@ export class MySqlUserRepository
         user.getPassword().toString(),
         user.getSignature().toString(),
         user.isEnterpriseAccount().getValue() ? '' : null,
+        user.isAccountVerified() ? '' : null,
         null
       ])
       .catch((err) => {
@@ -54,6 +56,7 @@ export class MySqlUserRepository
       new UserId(user.id),
       new Password(user.user_password, false),
       new EnterpriseAccount(user.isEnterpriseAccount !== null),
+      new AccountVerified(user.accountVerified !== null),
       new TwoFactorAuth(user.hasTwoFactorAuth !== null)
     )
   }
