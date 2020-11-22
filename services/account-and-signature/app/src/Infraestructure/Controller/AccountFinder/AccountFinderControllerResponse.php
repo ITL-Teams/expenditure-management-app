@@ -28,19 +28,13 @@ class AccountFinderControllerResponse extends ControllerResponse
       $serviceRequest->accountId = $this->params->accountid;
       $account = $this->service->invoke($serviceRequest);
       $response = [
-        'account_id' => $account->accountId,
-        'email' => $account->email,
-        'firstName' => $account->firstName,
-        'lastName' => $account->lastName,
-        'signature' => $account->signature,
-        'enterprise_account' => $account->enterpriseAccount
+        'account_id' => $account->getAccountId()->toString(),
+        'email' => $account->getEmail()->toString(),
+        'firstName' => $account->getFirstName()->toString(),
+        'lastName' => $account->getLastName()->toString(),
+        'signature' => $account->getSignatureId()->toString(),
+        'enterprise_account' => $account->getEnterpriseAccount()->toBool()
       ];
-
-      if ($account->signature != null)
-        $response['signature'] = $account->signature;
-        
-      if ($account->signature != null)
-        $response['enterpriseAccount'] = $account->enterpriseAccount;
 
       return new JsonResponse(['success' => $response]);
     } catch (RequestException | Exception $exeption) {
