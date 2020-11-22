@@ -1,0 +1,18 @@
+FROM node:current-slim
+
+RUN mkdir /home/app
+WORKDIR /home/app
+
+COPY src /home/app/src
+COPY ["tsconfig.json", "package.json", "package-lock.json", "/home/app/"]
+
+# COMPILE PROJECT
+RUN cd /home/app &&  npm ci
+RUN npm run build
+RUN rm -r src
+RUN rm -r node_modules
+
+# REINSTALL DEPENDENCIES
+RUN cd /home/app && npm install --only=prod
+
+CMD ["node", "built/index.js"]
