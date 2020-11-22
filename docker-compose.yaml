@@ -45,19 +45,15 @@ services:
     env_file:
       - ".env"
 
-  agreement-creator:
-    image: itl-teams/agreement-creator:dev
-    build:
-      context: ./services/agreement-creator
-      dockerfile: Dockerfile.dev
-    container_name: agreement-creator
+  agreement:
+    image: itl-teams/agreement:dev
+    build: ./services/agreement
+    container_name: agreement
     restart: unless-stopped
-    ports:
-      - "8080:3000"
     environment:
       - APP_NAME=Agreement/Express App
       - DEV_PORT=3000
     env_file:
       - "example.env"
     volumes:
-      - ./services/agreement-creator/src:/home/app/src
+      - ./services/agreement/src:/home/app/src
