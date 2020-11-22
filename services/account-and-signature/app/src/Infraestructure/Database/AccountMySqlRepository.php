@@ -93,7 +93,7 @@ class AccountMySqlRepository extends MySqlRepository implements IAccountReposito
         new FirstName($account->firstName),
         new LastName($account->lastName),
         new SignatureId($account->user_signature),
-        new EnterpriseAccount($account->isEnterpriseAccount != 'NULL')
+        new EnterpriseAccount(!is_null($account->isEnterpriseAccount))
       ));
      }    
 
