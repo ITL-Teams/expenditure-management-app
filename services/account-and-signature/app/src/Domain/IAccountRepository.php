@@ -10,4 +10,5 @@ interface IAccountRepository {
   public function find(AccountId $accountId): ?AccountFind;
   public function update(Account $account): bool;
   public function enterpriseFinder(): ArrayOfEnterpriseAccountEntities;
+  public function verifyAccount(AccountId $accountId, bool $verify): void;
 }
