@@ -23,5 +23,5 @@ ApiRoutes::init();
 ApiRoutes::addRoute(['GET'], '/create', 'App\Infraestructure\Controller\CreateSignature\SignatureCreatorController@handler');
 // ApiRoutes::addRoute(['GET'], '/get/{userId}', 'App\Infraestructure\Controller\FindUser\UserFinderController@handler');
 ApiRoutes::addRoute(['PUT'], '/update/{accountid}', 'App\Infraestructure\Controller\AccountUpdater\AccountUpdaterController@handler');
-ApiRoutes::addRoute(['GET'], '/find/{accountid}', 'App\Infraestructure\Controller\AccountFinder\AccountFinderController@handler');
 ApiRoutes::addRoute(['GET'], '/find/pending-review', 'App\Infraestructure\Controller\EnterpriseAccountFinder\EnterpriseAccountFinderController@handler');
+ApiRoutes::addRoute(['GET'], '/find/{accountid}', 'App\Infraestructure\Controller\AccountFinder\AccountFinderController@handler');
