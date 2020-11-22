@@ -24,15 +24,15 @@ class AccountFind
         FirstName $firstName,
         LastName $lastName,
         Email $email,
-        SignatureId $signature
-        //EnterpriseAccount $enterpriseAccount
+        SignatureId $signature,
+        EnterpriseAccount $enterpriseAccount
     ) {
         $this->accountId = $accountId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
         $this->signature = $signature;
-        //$this->enterpriseAccount = $enterpriseAccount;
+        $this->enterpriseAccount = $enterpriseAccount;
     }
 
     public function getAccountId(): AccountId
@@ -67,6 +67,6 @@ class AccountFind
 
     public function getEnterpriseAccount(): ?EnterpriseAccount
     {
-        return $this->enterpriseAccount;
+        return $this->enterpriseAccount;    
     }
 }
