@@ -1,47 +1,18 @@
 import { Router } from 'express'
-import { UserCreatorController } from '../controller/create-user/UserCreatorController'
-import { UserDeleterController } from '../controller/delete-user/UserDeleterController'
-import { UserFinderController } from '../controller/get-user/UserFinderController'
-import { UserUpdaterController } from '../controller/update-user/UserUpdaterController'
-import { MySqlUserRepository } from '../database/MySqlUserRepository'
+import { AgreementCreatorController } from '../controller/AgreementCreator/AgreementCreatorController'
+import { MySqlAgreementRepository } from '../database/MySqlAgreementRepository'
 export const router = Router()
 
-const user_repository = new MySqlUserRepository()
+const agreement_repository = new MySqlAgreementRepository()
 
 router.post('/create', async (request, response) => {
-  const controller = new UserCreatorController(user_repository)
+  const controller = new AgreementCreatorController(agreement_repository)
   const controllerResponse = await controller.handler({
-    firstName: request.body.firstName,
-    lastName: request.body.lastName
-  })
-
-  response.json(controllerResponse)
-})
-
-router.get('/get/:userId', async (request, response) => {
-  const controller = new UserFinderController(user_repository)
-  const controllerResponse = await controller.handler({
-    userId: request.params.userId
-  })
-
-  response.json(controllerResponse)
-})
-
-router.put('/update', async (request, response) => {
-  const controller = new UserUpdaterController(user_repository)
-  const controllerResponse = await controller.handler({
-    firstName: request.body.firstName,
-    lastName: request.body.lastName,
-    userId: request.body.userId
-  })
-
-  response.json(controllerResponse)
-})
-
-router.delete('/delete/:userId', async (request, response) => {
-  const controller = new UserDeleterController(user_repository)
-  const controllerResponse = await controller.handler({
-    userId: request.params.userId
+    agreement_id: request.body.agreement_id,
+    account_id: request.body.account_id,
+    budget_id: request.body.budget_id,
+    client_name: request.body.client_name,
+    agreement_message: request.body.agreement_message
   })
 
   response.json(controllerResponse)
