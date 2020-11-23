@@ -54,6 +54,6 @@ services:
       - APP_NAME=Agreement/Express App
       - DEV_PORT=3000
     env_file:
-      - "example.env"
+      - ".env"
     volumes:
       - ./services/agreement/src:/home/app/src
