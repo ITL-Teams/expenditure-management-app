@@ -32,3 +32,6 @@ CREATE TABLE agreement (
 
 INSERT INTO user_credentials
 VALUES ('b76c4ae8-7abf-4eef-8ed4-498736b117f1', 'admin@ema.com', 'Admin', 'Admin', '$2a$08$KDLvCZiGRTTgJE1U7hJYkO/6SVMi4qYrg8NJowGc0QnjVVY0YA6qy', '', NULL, '', '', 'JBSWY3DPEHPK3PXP');
+
+INSERT INTO agreement
+VALUES ('123qwe123qwe', 'b76c4ae8-7abf-4eef-8ed4-498736b117f1', '123', 'Admin', 'message', 'asdad12312das');

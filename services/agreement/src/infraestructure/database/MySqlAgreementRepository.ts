@@ -1,6 +1,7 @@
 import { MySqlRepository } from './MySqlRepository'
 import { IAgreementRepository } from '../../domain/IAgreementRepository'
 import { Agreement } from '../../domain/entity/Agreement'
+import { AgreementId } from '../../domain/value-object/AgreementId'
 
 export class MySqlAgreementRepository
   extends MySqlRepository
@@ -29,5 +30,17 @@ export class MySqlAgreementRepository
         'signature'
       ])
       .catch((err) => Promise.reject(err))
+  }
+
+  public async delete(id: AgreementId): Promise<boolean> {
+    const connection = await this.getConnection()
+    const sql = `DELETE FROM ${this.TABLE_NAME} WHERE id = ?`
+
+    const response = await connection
+      .query(sql, [id.toString()])
+      .catch((err) => Promise.reject(err))
+
+    const userDeleted = response.affectedRows !== 0
+    return userDeleted
   }
 }

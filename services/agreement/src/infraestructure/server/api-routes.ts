@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { AgreementCreatorController } from '../controller/AgreementCreator/AgreementCreatorController'
+import { AgreementDeleterController } from '../controller/AgreementDeleter/AgreementDeleterController'
 import { MySqlAgreementRepository } from '../database/MySqlAgreementRepository'
 export const router = Router()
 
@@ -13,6 +14,15 @@ router.post('/create', async (request, response) => {
     budget_id: request.body.budget_id,
     client_name: request.body.client_name,
     agreement_message: request.body.agreement_message
+  })
+
+  response.json(controllerResponse)
+})
+
+router.delete('/agreement/delete/:agreementId', async (request, response) => {
+  const controller = new AgreementDeleterController(agreement_repository)
+  const controllerResponse = await controller.handler({
+    agreementId: request.params.agreementId
   })
 
   response.json(controllerResponse)

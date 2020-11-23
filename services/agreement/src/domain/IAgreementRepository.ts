@@ -3,4 +3,5 @@ import { AgreementId } from './value-object/AgreementId'
 
 export interface IAgreementRepository {
   create(agreement: Agreement): Promise<void>
+  delete(agreementId: AgreementId): Promise<boolean>
 }
