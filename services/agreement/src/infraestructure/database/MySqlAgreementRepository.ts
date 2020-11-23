@@ -27,7 +27,7 @@ export class MySqlAgreementRepository
         agreement.getBudgetId().toString(),
         agreement.getClientName().toString(),
         agreement.getAgreementMessage().toString(),
-        'signature'
+        agreement.getAgreementSignature().toString()
       ])
       .catch((err) => Promise.reject(err))
   }

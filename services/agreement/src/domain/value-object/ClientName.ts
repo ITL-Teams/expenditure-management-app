@@ -1,14 +1,11 @@
 import { InvalidArgumentError } from '../error/InvalidArgumentError'
 
 export class ClientName {
-  private readonly firstName: string
-  private readonly lastName: string
+  private readonly clientName: string
 
-  constructor(firstName: string, lastName: string) {
-    this.firstName = firstName
-    this.lastName = lastName
-    this.ensureNameOnlyContainsLetters(firstName)
-    this.ensureNameOnlyContainsLetters(lastName)
+  constructor(clientName: string) {
+    this.clientName = clientName
+    this.ensureNameOnlyContainsLetters(clientName)
   }
 
   private ensureNameOnlyContainsLetters(value: string): void {
@@ -16,10 +13,10 @@ export class ClientName {
 
     if (valid_word.test(value)) return
 
-    throw new InvalidArgumentError(`${value} is not valid as name`)
+    throw new InvalidArgumentError(`${value} is not valid name`)
   }
 
   public toString(): string {
-    return `${this.firstName} ${this.lastName}`
+    return `${this.clientName}`
   }
 }

@@ -19,7 +19,7 @@ router.post('/create', async (request, response) => {
   response.json(controllerResponse)
 })
 
-router.delete('/agreement/delete/:agreementId', async (request, response) => {
+router.delete('/delete/:agreementId', async (request, response) => {
   const controller = new AgreementDeleterController(agreement_repository)
   const controllerResponse = await controller.handler({
     agreementId: request.params.agreementId
