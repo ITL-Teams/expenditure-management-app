@@ -3,7 +3,6 @@ import { AgreementCreatorRequest } from './AgreementCreatorRequest'
 import { AgreementCreatorResponse } from './AgreementCreatorResponse'
 import { AgreementCreator } from '../../../application/AgreementCreator/AgreementCreator'
 import { IAgreementRepository } from '../../../domain/IAgreementRepository'
-import { Agreement } from '../../../domain/entity/Agreement'
 
 export class AgreementCreatorController extends Controller<
   AgreementCreatorRequest,
@@ -62,12 +61,16 @@ export class AgreementCreatorController extends Controller<
         value_name: 'client_name',
         value: request.client_name,
         expected: 'string'
-      },
-      {
-        value_name: 'agreement_message',
-        value: request.agreement_message,
-        expected: 'string'
       }
     ])
+    if (request.agreement_message != null) {
+      this.validateRequestParams[this.validateRequestParams.length] = [
+        {
+          value_name: 'agreement_message',
+          value: request.agreement_message,
+          expected: 'string'
+        }
+      ]
+    }
   }
 }
