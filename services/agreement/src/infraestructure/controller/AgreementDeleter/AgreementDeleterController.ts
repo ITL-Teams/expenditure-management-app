@@ -25,7 +25,7 @@ export class AgreementDeleterController extends Controller<
 
       return {
         success: {
-          message: `Agreement with id = ${request.agreementId} was successfully removed`
+          message: `true`
         }
       }
     } catch (error) {
