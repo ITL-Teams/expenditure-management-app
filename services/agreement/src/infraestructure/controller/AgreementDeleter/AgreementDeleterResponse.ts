@@ -1,6 +1,6 @@
 export type AgreementDeleterResponse = {
   success?: {
-    message: string
+    deleted: boolean
   }
   error?: {
     message: string

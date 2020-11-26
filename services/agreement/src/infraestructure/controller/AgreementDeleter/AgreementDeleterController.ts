@@ -25,7 +25,7 @@ export class AgreementDeleterController extends Controller<
 
       return {
         success: {
-          message: `true`
+          deleted: true
         }
       }
     } catch (error) {
