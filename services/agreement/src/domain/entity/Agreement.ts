@@ -36,6 +36,10 @@ export class Agreement {
     return new Date().getTime().toString().concat(random.toString())
   }
 
+  private noMessage(): string {
+    return null
+  }
+
   private functionSignatureAgreement(): string {
     let signatureAgreement = ''
     const characters =
@@ -67,7 +71,9 @@ export class Agreement {
   }
 
   public getAgreementMessage(): AgreementMessage {
-    return this.agreementMessage
+    return this.agreementMessage.toString() == 'undefined'
+      ? new AgreementMessage(this.noMessage())
+      : this.agreementMessage
   }
 
   public getAgreementSignature(): AgreementSignature {
