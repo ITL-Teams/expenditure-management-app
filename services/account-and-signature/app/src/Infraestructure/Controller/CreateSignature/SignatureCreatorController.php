@@ -1,19 +1,17 @@
 <?php
-namespace App\Infraestructure\Controller\CreateUser;
+namespace App\Infraestructure\Controller\CreateSignature;
 
+use App\Application\CreateSignature\SignatureCreatorRequest;
+use App\Domain\Entity\Account;
+use App\Domain\Entity\Signature;
 use Rareloop\Router\RouteParams;
 use App\Infraestructure\Controller\Controller;
 use App\Infraestructure\Controller\ControllerResponse;
-use App\Infraestructure\Database\MySqlUserRepository;
-use App\Domain\ISignatureRepository;
-
 class SignatureCreatorController implements Controller {
-  private ISignatureRepository $repository;
 
   public function handler(RouteParams $params): ControllerResponse {
     $response = new SignatureCreatorControllerResponse($params);
-    $response->init(new MySqlUserRepository());
+    $response->init();
     return $response;
   }
-
 }

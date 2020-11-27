@@ -1,21 +1,19 @@
 <?php
+
 namespace App\Application\CreateSignature;
 
 use App\Domain\ISignatureRepository;
 use App\Domain\Entity\Signature;
+use App\Domain\ValueObject\SignatureId;
 
-class SignatureCreator {
-  private ISignatureRepository $repository;
+class SignatureCreator
+{
 
-  public function __construct(ISignatureRepository $repository) {
-    $this->repository = $repository;
-  }
-
-  public function invoke(SignatureCreatorRequest $request): Signature {
-    $Signature = new Signature(
-      // values
-    );
-    $this->repository->create($Signature);
-    return $Signature;
+  public function invoke(): SignatureCreatorResponse
+  {
+    $response = new SignatureCreatorResponse;
+    $signature = new Signature();
+    $response->signature = $signature->getSignature();
+    return $response;
   }
 }

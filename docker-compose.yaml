@@ -55,3 +55,16 @@ services:
       - ./services/mysql:/docker-entrypoint-initdb.d
     env_file:
       - ".env"
+
+  agreement:
+    image: itl-teams/agreement:dev
+    build: ./services/agreement
+    container_name: agreement
+    restart: unless-stopped
+    environment:
+      - APP_NAME=Agreement/Express App
+      - DEV_PORT=3000
+    env_file:
+      - ".env"
+    volumes:
+      - ./services/agreement/src:/home/app/src
