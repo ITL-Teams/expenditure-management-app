@@ -33,6 +33,17 @@ services:
       - ./services/account-and-signature/public:/var/www/html
       - ./services/account-and-signature/app:/var/www/app
 
+  company-budgets:
+    container_name: company-budgets
+    restart: unless-stopped
+    image: itl-teams/php:latest
+    build: ./services/company-budgets
+    env_file:
+      - ".env"
+    volumes:
+      - ./services/company-budgets/public:/var/www/html
+      - ./services/company-budgets/app:/var/www/app
+
   database:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
