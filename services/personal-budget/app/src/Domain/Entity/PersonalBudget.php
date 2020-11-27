@@ -8,6 +8,8 @@ use App\Domain\ValueObject\MountMax;
 use App\Domain\ValueObject\MountTotal;
 use App\Domain\ValueObject\OwnerId;
 use App\Domain\ValueObject\PersonalBudgetId;
+use App\Domain\ValueObject\Type;
+
 
 class PersonalBudget
 {
@@ -17,9 +19,11 @@ class PersonalBudget
     private MountTotal $mountTotal;
     private OwnerId $ownerId;
     private PersonalBudgetId $personalBudgetId;
+    private Type $type;
 
     public function __construct(
         AMount $amount,
+        Type $type,
         BudgetName $budgetName,
         MountMax $mountMax,
         MountTotal $mountTotal,
@@ -27,6 +31,7 @@ class PersonalBudget
         PersonalBudgetId $personalBudgetId =null
     ) {
         $this->amount = $amount;
+        $this->type = $amount;
         $this->budgetName = $budgetName;
         $this->mountMax = $mountMax;
         $this->mountTotal = $mountTotal;
@@ -44,6 +49,11 @@ class PersonalBudget
     public function getAMount(): AMount
     {
         return $this->amount;
+    }
+
+    public function getType(): Type
+    {
+        return $this->type;
     }
 
     public function getBudgetName(): BudgetName
