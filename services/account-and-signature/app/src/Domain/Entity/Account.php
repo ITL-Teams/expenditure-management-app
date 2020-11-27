@@ -14,23 +14,23 @@ class Account
     private Email $email;
     private FirstName $firstName;
     private LastName $lastName;
-    private Password $password;
-    private SignatureId $signature;
+    private ?Password $password;
+    private ?SignatureId $signature;
     private AccountId $accountId;
 
     public function __construct(
         AccountId $accountId,
         FirstName $firstName,
         LastName $lastName,
-        Password $password,
         Email $email,
-        SignatureId $signature
+        ?Password $password,
+        ?SignatureId $signature
     ) {
         $this->accountId = $accountId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->password = $password;
         $this->email = $email;
+        $this->password = $password;
         $this->signature = $signature;
     }
 
@@ -49,7 +49,7 @@ class Account
         return $this->lastName;
     }
 
-    public function getPassword(): Password
+    public function getPassword(): ?Password
     {
         return $this->password;
     }
@@ -59,7 +59,7 @@ class Account
         return $this->email;
     }
 
-    public function getSignatureId(): SignatureId
+    public function getSignatureId(): ?SignatureId
     {
         return $this->signature;
     }

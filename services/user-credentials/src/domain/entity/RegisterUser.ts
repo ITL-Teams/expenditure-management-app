@@ -60,4 +60,8 @@ export class RegisterUser {
   public isEnterpriseAccount(): EnterpriseAccount {
     return this._isEnterpriseAccount
   }
+
+  public isAccountVerified(): boolean {
+    return !this._isEnterpriseAccount.getValue()
+  }
 }
