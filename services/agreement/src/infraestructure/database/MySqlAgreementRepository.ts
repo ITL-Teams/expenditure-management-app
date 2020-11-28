@@ -41,10 +41,7 @@ export class MySqlAgreementRepository
       ])
       .catch((err) => Promise.reject(err))
     if (response.affectedRows > 0) return connection
-    else
-      throw new AccountIdNotExists(
-        agreement.getAccountId().toString() + response.affectedRows
-      )
+    else throw new AccountIdNotExists(agreement.getAccountId().toString())
   }
 
   public async delete(id: AgreementId): Promise<boolean> {
