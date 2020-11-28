@@ -2,16 +2,13 @@ import { MySqlRepository } from './MySqlRepository'
 import { IAgreementRepository } from '../../domain/IAgreementRepository'
 import { Agreement } from '../../domain/entity/Agreement'
 import { AgreementId } from '../../domain/value-object/AgreementId'
-<<<<<<< HEAD
 import { AccountIdNotExists } from './error/AccountIdNotExist'
-=======
 import { AgreementFinderEntity } from '../../domain/entity/AgreementFinderEntity'
 import { AgreementMessage } from '../../domain/value-object/AgreementMessage'
 import { AgreementSignature } from '../../domain/value-object/AgreementSignature'
 import { AccountId } from '../../domain/value-object/AccountId'
 import { BudgetId } from '../../domain/value-object/BudgetId'
 import { ClientName } from '../../domain/value-object/ClientName'
->>>>>>> 81b313eb83c3385abce649a831f1c0cb8fb809de
 
 export class MySqlAgreementRepository
   extends MySqlRepository
