@@ -37,7 +37,7 @@ export class Agreement {
   }
 
   private noMessage(): string {
-    return null
+    return "This agreement between [Company name] and [Contact name]  is hereby entered into on this date: [Date here]. Purpose: [Company name] and [Contact name] will be entering into discussions involving [Company name]'s development and operation, which require [Company name] to disclose confidential information to [Contact name] on an ongoing basis. This agreement's purpose is to ensure confidentiality and to prevent [Contact name] from disclosing such confidential information"
   }
 
   private functionSignatureAgreement(): string {
