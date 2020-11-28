@@ -18,7 +18,6 @@ export class MySqlAgreementRepository
 
   public async create(agreement: Agreement): Promise<void> {
     const connection = await this.getConnection()
-    let error, results, field
     const sql = `INSERT INTO ${this.TABLE_NAME}
                     (
                         id,
@@ -31,29 +30,21 @@ export class MySqlAgreementRepository
                     WHERE EXISTS ( SELECT id FROM ${this.TABLE_NAME_USER}
                         WHERE id = \'${agreement.getAccountId().toString()}\' )`
 
-    // if (connection.affectedRows > 0)
-    connection
-      .query(
-        sql,
-        [
-          agreement.getAgreementId().toString(),
-          agreement.getAccountId().toString(),
-          agreement.getBudgetId().toString(),
-          agreement.getClientName().toString(),
-          agreement.getAgreementMessage().toString(),
-          agreement.getAgreementSignature().toString()
-        ],
-        function (err, result) {
-          results = result
-        }
-      )
+    const response = await connection
+      .query(sql, [
+        agreement.getAgreementId().toString(),
+        agreement.getAccountId().toString(),
+        agreement.getBudgetId().toString(),
+        agreement.getClientName().toString(),
+        agreement.getAgreementMessage().toString(),
+        agreement.getAgreementSignature().toString()
+      ])
       .catch((err) => Promise.reject(err))
-    if (results.affectedRows < 1) return connection
-    throw new AccountIdNotExists(agreement.getAccountId().toString())
-    // else
-    //   throw new AccountIdNotExists(
-    //     agreement.getAccountId().toString() + error + results + field
-    //   )
+    if (response.affectedRows > 0) return connection
+    else
+      throw new AccountIdNotExists(
+        agreement.getAccountId().toString() + response.affectedRows
+      )
   }
 
   public async delete(id: AgreementId): Promise<boolean> {
