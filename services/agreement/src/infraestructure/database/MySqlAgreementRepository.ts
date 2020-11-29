@@ -2,7 +2,6 @@ import { MySqlRepository } from './MySqlRepository'
 import { IAgreementRepository } from '../../domain/IAgreementRepository'
 import { Agreement } from '../../domain/entity/Agreement'
 import { AgreementId } from '../../domain/value-object/AgreementId'
-import { AccountIdNotExists } from './error/AccountIdNotExist'
 import { AgreementFinderEntity } from '../../domain/entity/AgreementFinderEntity'
 import { AgreementMessage } from '../../domain/value-object/AgreementMessage'
 import { AgreementSignature } from '../../domain/value-object/AgreementSignature'
@@ -26,9 +25,7 @@ export class MySqlAgreementRepository
                         client_name,
                         agreement_message,
                         agreement_signature
-                    ) SELECT ?,?,?,?,?,?
-                    WHERE EXISTS ( SELECT id FROM ${this.TABLE_NAME_USER}
-                        WHERE id = \'${agreement.getAccountId().toString()}\' )`
+                    ) VALUES (?,?,?,?,?,?)`
 
     const response = await connection
       .query(sql, [
@@ -41,7 +38,6 @@ export class MySqlAgreementRepository
       ])
       .catch((err) => Promise.reject(err))
     if (response.affectedRows > 0) return connection
-    else throw new AccountIdNotExists(agreement.getAccountId().toString())
   }
 
   public async delete(id: AgreementId): Promise<boolean> {
