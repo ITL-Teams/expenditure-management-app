@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
     "promise-mysql": "^4.1.3"
   }
 }
