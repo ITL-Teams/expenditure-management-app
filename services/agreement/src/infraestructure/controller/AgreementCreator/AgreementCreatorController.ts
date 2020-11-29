@@ -31,7 +31,7 @@ export class AgreementCreatorController extends Controller<
       return {
         success: {
           agreement_id: AgreementCreator.getAgreementId().toString(),
-          agreement_message: request.agreement_message,
+          agreement_message: AgreementCreator.getAgreementMessage().toString(),
           agreement_signature: AgreementCreator.getAgreementSignature().toString()
         }
       }
@@ -46,7 +46,7 @@ export class AgreementCreatorController extends Controller<
   }
 
   private validateRequest(request: AgreementCreatorRequest): void {
-    this.validateRequestParams([
+    var validateRequestParams = [
       {
         value_name: 'account_id',
         value: request.account_id,
@@ -62,15 +62,14 @@ export class AgreementCreatorController extends Controller<
         value: request.client_name,
         expected: 'string'
       }
-    ])
+    ]
     if (request.agreement_message != null) {
-      this.validateRequestParams[this.validateRequestParams.length] = [
-        {
-          value_name: 'agreement_message',
-          value: request.agreement_message,
-          expected: 'string'
-        }
-      ]
+      validateRequestParams.push({
+        value_name: 'agreement_message',
+        value: request.agreement_message,
+        expected: 'string'
+      })
     }
+    this.validateRequestParams(validateRequestParams)
   }
 }

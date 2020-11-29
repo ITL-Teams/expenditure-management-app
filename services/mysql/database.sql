@@ -24,7 +24,7 @@ CREATE TABLE agreement (
     account_id          VARCHAR(255) NOT NULL,
     budget_id           VARCHAR(255) NOT NULL,
     client_name         VARCHAR(255) NOT NULL,
-    agreement_message   VARCHAR(255) DEFAULT NULL,
+    agreement_message   VARCHAR(2500) NOT NULL,
     agreement_signature VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id)

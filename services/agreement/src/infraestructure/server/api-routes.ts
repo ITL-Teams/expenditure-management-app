@@ -11,7 +11,6 @@ const agreement_repository = new MySqlAgreementRepository()
 router.post('/create', async (request, response) => {
   const controller = new AgreementCreatorController(agreement_repository)
   const controllerResponse = await controller.handler({
-    agreement_id: request.body.agreement_id,
     account_id: request.body.account_id,
     budget_id: request.body.budget_id,
     client_name: request.body.client_name,
