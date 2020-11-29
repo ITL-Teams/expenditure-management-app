@@ -73,4 +73,42 @@ export class MySqlAgreementRepository
       new ClientName(agreement.client_name)
     )
   }
+
+  public async userExists(accountId: AccountId): Promise<boolean> {
+    const fetch = require('node-fetch')
+    const response = await fetch(
+      `${process.env.API_GATEWAY}/account/find/${accountId.toString()}`
+    )
+    const responseJson = await response.json()
+    return responseJson.success
+  }
+
+  public async findAll(accountId: AccountId): Promise<AgreementFinderEntity[]> {
+    const connection = await this.getConnection()
+    const sql = `SELECT * FROM ${this.TABLE_NAME} WHERE account_id = ?`
+
+    let agreements = await connection
+      .query(sql, [accountId.toString()])
+      .catch((err) => {
+        throw new Error(err)
+      })
+
+    if (!Array.isArray(agreements)) return null
+
+    let formatedAgreements: AgreementFinderEntity[] = []
+    for (const agreement of agreements) {
+      formatedAgreements.push(
+        new AgreementFinderEntity(
+          new AgreementId(agreement.id),
+          new AgreementMessage(agreement.agreement_message),
+          new AgreementSignature(agreement.agreement_signature),
+          new AccountId(agreement.account_id),
+          new BudgetId(agreement.budget_id),
+          new ClientName(agreement.client_name)
+        )
+      )
+    }
+
+    return formatedAgreements
+  }
 }

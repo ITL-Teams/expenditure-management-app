@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { AgreementCreatorController } from '../controller/AgreementCreator/AgreementCreatorController'
 import { AgreementDeleterController } from '../controller/AgreementDeleter/AgreementDeleterController'
 import { AgreementFinderController } from '../controller/AgreementFinder/AgreementFinderController'
+import { AllAgreementFinderController } from '../controller/AllAgreementFinder/AllAgreementFinderController'
 import { MySqlAgreementRepository } from '../database/MySqlAgreementRepository'
 export const router = Router()
 
@@ -24,6 +25,15 @@ router.delete('/delete/:agreementId', async (request, response) => {
   const controller = new AgreementDeleterController(agreement_repository)
   const controllerResponse = await controller.handler({
     agreementId: request.params.agreementId
+  })
+
+  response.json(controllerResponse)
+})
+
+router.get('/get/all/:accountId', async (request, response) => {
+  const controller = new AllAgreementFinderController(agreement_repository)
+  const controllerResponse = await controller.handler({
+    accountId: request.params.accountId
   })
 
   response.json(controllerResponse)
