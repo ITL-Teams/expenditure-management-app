@@ -5,7 +5,7 @@ import { BudgetId } from '../../domain/value-object/BudgetId'
 import { ClientName } from '../../domain/value-object/ClientName'
 import { AgreementMessage } from '../../domain/value-object/AgreementMessage'
 import { AgreementCreatorRequest } from './AgreementCreatorRequest'
-import { AgreementId } from '../../domain/value-object/AgreementId'
+import { AccountNotFound } from '../error/AccountNotFound'
 
 export class AgreementCreator {
   private repository: IAgreementRepository
@@ -15,6 +15,14 @@ export class AgreementCreator {
   }
 
   async invoke(request: AgreementCreatorRequest): Promise<Agreement> {
+    const accountId = new AccountId(request.account_id)
+    const userExists = await this.repository.userExists(accountId)
+
+    if (!userExists)
+      throw new AccountNotFound(
+        `account_id = ${request.account_id} does not exist`
+      )
+
     const agreement = new Agreement(
       new AccountId(request.account_id),
       new BudgetId(request.budget_id),

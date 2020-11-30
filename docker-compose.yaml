@@ -53,6 +53,7 @@ services:
     environment:
       - APP_NAME=Agreement/Express App
       - DEV_PORT=3000
+      - API_GATEWAY=http://api-gateway
     env_file:
       - ".env"
     volumes:

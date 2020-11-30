@@ -9,7 +9,7 @@ export class AgreementMessage {
   }
 
   private ensureNameOnlyContainsLetters(value: string): void {
-    const valid_word = /^([a-zA-Z\s\-',|();:.0-9!"#$%&><¡!?¿*+{}=\[\]])+$/
+    const valid_word = /^([a-zA-Z\s\-',|();:.0-9!"“”#$%&><¡!?¿*+{}=\[\]])+$/
 
     if (valid_word.test(value)) return
 
