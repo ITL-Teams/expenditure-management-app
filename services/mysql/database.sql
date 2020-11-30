@@ -39,12 +39,13 @@ CREATE TABLE charges (
 );
 
 CREATE TABLE collaborators(
+    id                  INT AUTO_INCREMENT,
     collaborator_id     VARCHAR(255) NOT NULL,
     budget_id           VARCHAR(255) NOT NULL,
     collaborator_name   VARCHAR(255) NOT NULL,
     budget_percentage   INT NOT NULL,
-    budget_assigned     INT(1) DEFAULT 1,
-    PRIMARY KEY (collaborator_id)
+    budget_quantity     INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE agreement (
