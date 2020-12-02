@@ -6,6 +6,8 @@ use App\Domain\Entity\CompanyBudget;
 use App\Domain\Entity\Budget;
 use App\Domain\Entity\Collaborator;
 use App\Domain\Entity\BudgetQuantities;
+use App\Domain\Entity\ArrayOwnerBudgets;
+use App\Domain\Entity\OwnerBudgets;
 use App\Domain\ValueObject\BudgetId;
 use App\Domain\ValueObject\CollaboratorId;
 use App\Domain\ValueObject\CollaboratorName;
@@ -217,6 +219,46 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
       return new Collaborator(new CollaboratorId($collaborator->collaborator_id),new BudgetId($collaborator->budget_id),
                               new CollaboratorName($collaborator->collaborator_name),new BudgetPercentage($collaborator->budget_percentage),
                               new BudgetQuantity($collaborator->budget_quantity));
+    }
+
+    public function budgetIdFinder(OwnerId $ownerId): ArrayOwnerBudgets {
+      $budgets = new ArrayOwnerBudgets(); 
+      $connection = $this->getConnection();
+      $sql = 'SELECT id,budget_name FROM company_budgets WHERE owner_id = :owner_id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':owner_id', $ownerId->toString()); 
+      $query->execute();
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);  
+      if ($result == null)
+        return $budgets;
+
+      foreach($result as $budget) {      
+        $budgets->addBudget(new OwnerBudgets(
+                              new BudgetId($budget->id),
+                              new BudgetName($budget->budget_name))
+        );
+      }    
+      return $budgets;
+    }
+
+    public function collaboratorIdFinder(CollaboratorId $collaboratorId): ArrayOwnerBudgets {
+      $budgets = new ArrayOwnerBudgets(); 
+      $connection = $this->getConnection();
+      $sql = 'SELECT b.id,b.budget_name FROM company_budgets AS b INNER JOIN collaborators AS c ON b.id = c.budget_id WHERE collaborator_id = :collaborator_id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':collaborator_id', $collaboratorId->toString()); 
+      $query->execute();
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);  
+      if ($result == null)
+        return $budgets;
+
+      foreach($result as $budget) {      
+        $budgets->addBudget(new OwnerBudgets(
+                              new BudgetId($budget->id),
+                              new BudgetName($budget->budget_name))
+        );
+      }    
+      return $budgets;
     }
   // public function get(UserId $id): ?User {
   //   $connection = $this->getConnection();

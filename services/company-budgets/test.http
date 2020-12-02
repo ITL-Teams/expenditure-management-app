@@ -25,17 +25,17 @@ POST http://localhost/enterprise-budget/create
 Content-Type: application/json
 
 {
-    "budget_name": "Servicios Basicos",
+    "budget_name": "Papeleria",
     "owner_id": "dlopezp",
-    "budget_limit": 10000
+    "budget_limit": 3400
 }
 
 ###
-PUT  http://localhost/enterprise-budget/update/160670812586
+PUT  http://localhost/enterprise-budget/update/160680351589
 Content-Type: application/json
 
 {
-    "budget_name": "Servicios Basicos 4",
+    "budget_name": "Servicios Basicos 3",
     "budget_limit": 7000
 }
 
@@ -44,7 +44,7 @@ DELETE http://localhost/enterprise-budget/delete/160670812530
 Content-Type: application/json
 
 ###
-POST http://localhost/enterprise-budget/add/160671639548
+POST http://localhost/enterprise-budget/add/160680359180
 Content-Type: application/json
 
 {
@@ -56,3 +56,12 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost/enterprise-budget/remove/160671639548/dtorres
+
+
+###
+
+GET http://localhost/enterprise-budget/get/all/dlopezp
+
+
+###
+GET http://localhost/enterprise-budget/get/shared/all/dtorres

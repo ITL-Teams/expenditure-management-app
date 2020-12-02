@@ -1,6 +1,6 @@
 <?php
-namespace App\Application\GetUser;
+namespace App\Application\BudgetFinder;
 
-class UserFinderRequest {
-  public string $user_id;
+class BudgetFinderRequest {
+  public string $budgetId;
 }
