@@ -1,0 +1,25 @@
+FROM php:7.4.10-apache-buster
+
+RUN mkdir /var/www/app
+
+RUN docker-php-ext-install pdo pdo_mysql
+RUN a2enmod rewrite
+
+# Install Composer
+RUN apt update
+RUN cd && curl -sS https://getcomposer.org/installer -o composer-setup.php
+RUN cd && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN cd && rm composer-setup.php
+RUN apt-get install unzip -y
+RUN apt-get install git -y
+
+# Copy project content
+COPY public /var/www/html
+COPY app /var/www/app
+
+# Install project dependencies
+RUN cd /var/www/app && composer install
+
+# Prepare for production
+COPY ports.conf /etc/apache2
+COPY 000-default.conf /etc/apache2/sites-enabled
