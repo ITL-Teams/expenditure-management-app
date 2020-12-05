@@ -32,6 +32,7 @@ CREATE TABLE company_budgets (
 CREATE TABLE charges (
     charge_id           VARCHAR(255) NOT NULL,
     collaborator_id     VARCHAR(255) NOT NULL, 
+    budget_id           VARCHAR(255) NOT NULL, 
     title               VARCHAR(255) NOT NULL,
     date                VARCHAR(255) NOT NULL,
     time                VARCHAR(255) NOT NULL,

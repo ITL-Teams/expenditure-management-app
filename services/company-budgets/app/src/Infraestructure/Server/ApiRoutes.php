@@ -25,5 +25,8 @@ ApiRoutes::addRoute(['PUT'], '/update/{budgetid}', 'App\Infraestructure\Controll
 ApiRoutes::addRoute(['DELETE'], '/delete/{budgetid}', 'App\Infraestructure\Controller\BudgetDeleter\BudgetDeleterController@handler');
 ApiRoutes::addRoute(['POST'], '/add/{budgetid}', 'App\Infraestructure\Controller\BudgetCollaboratorAdder\BudgetCollaboratorController@handler');
 ApiRoutes::addRoute(['DELETE'], '/remove/{budgetid}/{collaboratorid}', 'App\Infraestructure\Controller\BudgetCollaboratorRemover\BudgetCollaboratorRemoverController@handler');
+ApiRoutes::addRoute(['DELETE'], '/delete/charge/{chargeid}', 'App\Infraestructure\Controller\BudgetItemRemover\BudgetItemRemoverController@handler');
 ApiRoutes::addRoute(['GET'], '/get/all/{ownerid}', 'App\Infraestructure\Controller\BudgetIdFinder\BudgetIdFinderController@handler');
 ApiRoutes::addRoute(['GET'], '/get/shared/all/{collaboratorid}', 'App\Infraestructure\Controller\CollaboratorIdFinder\CollaboratorIdFinderController@handler');
+ApiRoutes::addRoute(['GET'], '/get/{budgetid}', 'App\Infraestructure\Controller\BudgetMaster\BudgetMasterController@handler');
+ApiRoutes::addRoute(['POST'], '/create/charge/{budgetid}', 'App\Infraestructure\Controller\BudgetItemCreator\BudgetItemCreatorController@handler');

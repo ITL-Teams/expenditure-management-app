@@ -19,6 +19,12 @@ class BudgetCollaboratorRemover {
   public function invoke(BudgetCollaboratorRemoverRequest $request): void {
     
     $budgetId = new BudgetId($request->budgetId);
+
+    $budgetExist = $this->repository->budgetFinderId($budgetId);
+    
+    if($budgetExist==false)
+      throw new \Exception('The budget does not exist '.$request->budgetId);
+
     $collaboratorId = new CollaboratorId($request->collaboratorId);
     
     $budgetExist = $this->repository->searchBudgetCollaborator($budgetId,$collaboratorId);    

@@ -21,7 +21,12 @@ class BudgetCollaboratorAdder {
   public function invoke(BudgetCollaboratorAdderRequest $request): Collaborator {
     /* Value Objects */
     $budgetId = new BudgetId($request->budgetId);
-    $collaboratorId = new CollaboratorId($request->collaboratorId);
+    
+    $budgetExist = $this->repository->budgetFinderId($budgetId);    
+    if($budgetExist==false)
+      throw new \Exception('The budget does not exist '.$request->budgetId);
+    
+      $collaboratorId = new CollaboratorId($request->collaboratorId);
     $budgetPercentage = new BudgetPercentage($request->budgetPercentage);
     /* Se obtienen cantidades a actualizar */
     $budgetQuantities = $this->repository->getBudgetQuantities($budgetId);

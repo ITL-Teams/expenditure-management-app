@@ -4,18 +4,24 @@ namespace App\Infraestructure\Database;
 use App\Domain\IBudgetRepository;
 use App\Domain\Entity\CompanyBudget;
 use App\Domain\Entity\Budget;
+use App\Domain\Entity\Budgets;
 use App\Domain\Entity\Collaborator;
 use App\Domain\Entity\BudgetQuantities;
 use App\Domain\Entity\ArrayOwnerBudgets;
+use App\Domain\Entity\ArrayCollaborators;
+use App\Domain\Entity\ArrayCharges;
 use App\Domain\Entity\OwnerBudgets;
+use App\Domain\Entity\Charge;
 use App\Domain\ValueObject\BudgetId;
 use App\Domain\ValueObject\CollaboratorId;
+use App\Domain\ValueObject\ChargeId;
 use App\Domain\ValueObject\CollaboratorName;
 use App\Domain\ValueObject\BudgetName;
 use App\Domain\ValueObject\OwnerId;
 use App\Domain\ValueObject\BudgetLimit;
 use App\Domain\ValueObject\BudgetPercentage;
 use App\Domain\ValueObject\BudgetQuantity;
+use App\Domain\ValueObject\Title;
 
 class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository {
   private string $TABLE_NAME = 'company_budgets';
@@ -259,6 +265,128 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
         );
       }    
       return $budgets;
+    }
+
+    public function chargeExists(CollaboratorId $CollaboratorId,BudgetId $budgetId,Title $title):bool{
+      $connection = $this->getConnection();
+      $sql = 'SELECT * FROM charges  WHERE collaborator_id = :collaborator_id AND budget_id = :budget_id AND title = :title';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':collaborator_id', $collaboratorId->toString()); 
+      $query->bindParam(':budget_id', $budget_id->toString()); 
+      $query->bindParam(':title', $title->toString()); 
+      $query->execute();
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);
+      if(\is_array($result) && sizeof($result) < 1)
+        return false;
+      else
+        return true;
+    }
+
+    public function budgetItemCreator(Charge $charge):void{
+      $connection = $this->getConnection();
+      $sql = 'INSERT INTO charges (charge_id,collaborator_id,budget_id,title,date,time,amount) 
+              VALUES (:charge_id,:collaborator_id,:budget_id,:title,:date,:time,:amount)';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':charge_id', $charge->getId()->toString());
+      $query->bindParam(':collaborator_id', $charge->getCollaboratorId()->toString());
+      $query->bindParam(':budget_id', $charge->getBudgetId()->toString());
+      $query->bindParam(':title', $charge->getTitle()->toString());
+      $query->bindParam(':date', $charge->getDate()->toString());
+      $query->bindParam(':time', $charge->getTime()->toString());
+      $query->bindParam(':amount', $charge->getBudgetLimit()->toInt());
+      $query->execute();
+    }
+
+    public function getCollaborators(BudgetId $budgetId):ArrayCollaborators {
+      $connection = $this->getConnection();
+      $sql = 'SELECT * FROM collaborators WHERE budget_id = :budget_id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':budget_id', $budgetId->toString()); 
+      $query->execute();
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);  
+      $budgets = new ArrayCollaborators();
+      if ($result == null)
+        return $budgets;
+      foreach($result as $budget) {      
+        $budgets->addBudget(new Collaborator(
+                                  new CollaboratorId($budget->collaborator_id),
+                                  new BudgetId($budget->budget_id),
+                                  new CollaboratorName($budget->collaborator_name),
+                                  new BudgetPercentage($budget->budget_percentage),
+                                  new BudgetQuantity($budget->budget_quantity)
+                                )
+                           );
+      }    
+      return $budgets;
+    }
+    
+    public function getCharges(BudgetId $budgetId):ArrayCharges {
+      $budgets = new ArrayCharges(); 
+      $connection = $this->getConnection();
+      $sql = 'SELECT * FROM charges WHERE budget_id = :budget_id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':budget_id', $budgetId->toString()); 
+      $query->execute();
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);  
+      if ($result == null)
+        return $budgets;
+
+      foreach($result as $budget) {      
+        $budgets->addBudget(new Charge(
+                                  new CollaboratorId($budget->collaborator_id),
+                                  new BudgetId($budget->budget_id),
+                                  new Title($budget->title),
+                                  new BudgetLimit($budget->amount),
+                                  new Date($budget->date),
+                                  new Time($budget->time),
+                                  new ChargeId($charge_id),
+                                )
+                           );
+      }    
+      return $budgets;
+    }
+
+    public function getBudgets(BudgetId $budgetId):Budgets{
+      $connection = $this->getConnection();
+      $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE id = :budget_id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':budget_id', $budgetId->toString());
+      $query->execute();    
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);
+      if(\is_array($result) && sizeof($result) < 1)
+        throw new \Exception('The budget does not exist '.$budgetId);
+      else
+        $result = $result[0];
+        return new Budgets( $budgetId,
+                            new BudgetName($result->budget_name),
+                            new OwnerId($result->owner_id),
+                            new BudgetLimit($result->budget_limit),
+                            new BudgetPercentage($result->budget_percentage));
+    }
+
+    public function chargeFinderId(ChargeId $chargeId): bool{
+      $connection = $this->getConnection();
+      $sql = 'SELECT * FROM charges WHERE charge_id = :id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':id', $chargeId->toString());
+      $query->execute();    
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);
+      if(\is_array($result) && sizeof($result) < 1)
+        return false;
+      else
+        return true;
+    }
+
+    public function budgetItemRemover(ChargeId $chargeId): bool{
+      $connection = $this->getConnection();
+      $sql = 'DELETE FROM charges WHERE charge_id = :budget_id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':budget_id',$chargeId->toString());
+      $query->execute();    
+      if($query->rowCount()>0)
+        return true;
+      else
+        return false;
     }
   // public function get(UserId $id): ?User {
   //   $connection = $this->getConnection();
