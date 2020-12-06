@@ -26,21 +26,22 @@ class BudgetCollaboratorRemover {
       throw new \Exception('The budget does not exist '.$request->budgetId);
 
     $collaboratorId = new CollaboratorId($request->collaboratorId);
-    
+
     $budgetExist = $this->repository->searchBudgetCollaborator($budgetId,$collaboratorId);    
     
     if(!$budgetExist)
       throw new \Exception('this budget is not assigned to this collaborator '.$request->budget_id);
     
     $budgetQuantitiesCollaborator = $this->repository->searchQuantitiesCollaborator($budgetId,$collaboratorId);
+    
     $budgetQuantitiesBudget = $this->repository->getBudgetQuantities($budgetId);
+    
     $budgetTotalPercentage = $budgetQuantitiesBudget->getPercentage()->toInt() + $budgetQuantitiesCollaborator->getPercentage()->toInt(); 
-    $budgetTotalLimit = $budgetQuantitiesBudget->getBudgetLimit()->toInt() + $budgetQuantitiesCollaborator->getBudgetLimit()->toInt();
-    $newBudgetQuantities = new BudgetQuantities(new BudgetPercentage($budgetTotalPercentage),new BudgetLimit($budgetTotalLimit));
-
-    $budgetUpdated = $this->repository->updatedBudgetQuantities($budgetId,$newBudgetQuantities);   
+    
+    $budgetUpdated = $this->repository->updatedBudgetQuantities($budgetId,$budgetTotalPercentage);   
     if(!$budgetUpdated)
       throw new \Exception('an error occurred while allocating the budget');    
+    
     $budget = $this->repository->budgetCollaboratorRemover($budgetId,$collaboratorId);
   }
 

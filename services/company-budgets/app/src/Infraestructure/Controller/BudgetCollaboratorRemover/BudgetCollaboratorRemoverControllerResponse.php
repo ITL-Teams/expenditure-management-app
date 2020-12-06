@@ -30,15 +30,14 @@ class BudgetCollaboratorRemoverControllerResponse extends ControllerResponse {
         'success' => [
           'message' => 'Collaborator: '
             .$this->params->collaboratorid.' '
-            .' has been removed to the budget',
-          'id' => $this->params->budgetid
+            .' has been removed to the budget'
         ]
       ]);
 
     } catch(RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
-          'message' => 'Collaborator was not registered',
+          'message' => 'Collaborator not removed from the budget',
           'reason' => $exeption->getMessage()
         ]
       ]);

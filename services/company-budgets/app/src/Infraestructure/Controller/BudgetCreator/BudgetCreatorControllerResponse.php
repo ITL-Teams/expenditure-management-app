@@ -35,8 +35,6 @@ class BudgetCreatorControllerResponse extends ControllerResponse {
         'success' => [
           'message' => 'Budget: '
             .$payload->budget_name.' '
-            .$payload->owner_id.' '
-            .$payload->budget_limit.' '
             .' has been registered in db',
           'id' => $budget->getId()->toString()
         ]

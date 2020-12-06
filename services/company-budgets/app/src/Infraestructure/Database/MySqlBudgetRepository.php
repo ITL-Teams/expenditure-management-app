@@ -39,7 +39,7 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
 
   public function budgetFinderName(BudgetName $budgetName,OwnerId $ownerId): bool {
     $connection = $this->getConnection();
-    $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE budget_name = :budget_name AND owner_id = :owner_id AND active_budget = 1';
+    $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE budget_name = :budget_name AND owner_id = :owner_id';
     $query = $connection->prepare($sql);
     $query->bindParam(':budget_name', $budgetName->toString());
     $query->bindParam(':owner_id', $ownerId->toString());
@@ -67,9 +67,35 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
 
   public function budgetFinderId(BudgetId $budgetId): bool {
     $connection = $this->getConnection();
-    $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE id = :id AND active_budget = 1';
+    $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE id = :id';
     $query = $connection->prepare($sql);
     $query->bindParam(':id', $budgetId->toString());
+    $query->execute();    
+    $result = $query->fetchAll(\PDO::FETCH_OBJ);
+    if(\is_array($result) && sizeof($result) < 1)
+      return false;
+    else
+      return true;
+  }
+
+  public function validateOwner(OwnerId $ownerId): bool {
+    $connection = $this->getConnection();
+    $sql = 'SELECT * FROM '.$this->TABLE_NAME.' WHERE owner_id = :id';
+    $query = $connection->prepare($sql);
+    $query->bindParam(':id', $ownerId->toString());
+    $query->execute();    
+    $result = $query->fetchAll(\PDO::FETCH_OBJ);
+    if(\is_array($result) && sizeof($result) < 1)
+      return false;
+    else
+      return true;
+  }
+
+  public function validateCollaborator(CollaboratorId $collaboratorId): bool {
+    $connection = $this->getConnection();
+    $sql = 'SELECT * FROM collaborators WHERE collaborator_id = :id';
+    $query = $connection->prepare($sql);
+    $query->bindParam(':id', $collaboratorId->toString());
     $query->execute();    
     $result = $query->fetchAll(\PDO::FETCH_OBJ);
     if(\is_array($result) && sizeof($result) < 1)
@@ -96,14 +122,14 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
   
   public function searchQuantitiesCollaborator(BudgetId $budgetId,CollaboratorId $collaboratorId): BudgetQuantities {
     $connection = $this->getConnection();
-    $sql = 'SELECT budget_percentage,budget_quantity FROM collaborators WHERE collaborator_id = :collaborator_id AND budget_id = :budget_id';
+    $sql = 'SELECT budget_percentage FROM collaborators WHERE collaborator_id = :collaborator_id AND budget_id = :budget_id';
     $query = $connection->prepare($sql);
     $query->bindParam(':collaborator_id', $collaboratorId->toString());
     $query->bindParam(':budget_id', $budgetId->toString());
     $query->execute();   
     $result = $query->fetchAll(\PDO::FETCH_OBJ);
     $quantities = $result[0];
-    return new BudgetQuantities(new BudgetPercentage($quantities->budget_percentage),new BudgetLimit($quantities->budget_quantity));
+    return new BudgetQuantities(new BudgetPercentage($quantities->budget_percentage),new BudgetLimit($quantities->budget_percentage));
   }
 
   public function budgetUpdater(Budget $budget): bool {
@@ -117,13 +143,11 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
     return true;
   }
 
-  public function updatedBudgetQuantities(BudgetId $budgetid,BudgetQuantities $budgetQuantities): bool {
+  public function updatedBudgetQuantities(BudgetId $budgetid,Int $budgetPercentage): bool {
     $connection = $this->getConnection();
-    $sql = 'UPDATE '.$this->TABLE_NAME.' SET budget_limit = :budget_limit, 
-            budget_percentage = :budget_percentage WHERE id = :budget_id';
+    $sql = 'UPDATE '.$this->TABLE_NAME.' SET budget_percentage = :budget_percentage WHERE id = :budget_id';
     $query = $connection->prepare($sql);
-    $query->bindParam(':budget_limit',$budgetQuantities->getBudgetLimit()->toInt());
-    $query->bindParam(':budget_percentage',$budgetQuantities->getPercentage()->toInt());
+    $query->bindParam(':budget_percentage',$budgetPercentage);
     $query->bindParam(':budget_id',$budgetid->toString());
     $query->execute();    
     if($query->rowCount()>0)
@@ -134,11 +158,10 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
 
   public function budgetCollaboratorUpdated(Collaborator $collaborator): bool {
     $connection = $this->getConnection();
-    $sql = 'UPDATE collaborators SET budget_percentage = :budget_percentage, 
-            budget_quantity = :budget_quantity WHERE budget_id = :budget_id AND collaborator_id = :collaborator_id';
+    $sql = 'UPDATE collaborators SET budget_percentage = :budget_percentage 
+            WHERE budget_id = :budget_id AND collaborator_id = :collaborator_id';
     $query = $connection->prepare($sql);
     $query->bindParam(':budget_percentage',$collaborator->getBudgetPercentage()->toInt());
-    $query->bindParam(':budget_quantity',$collaborator->getBudgetQuantity()->toInt());
     $query->bindParam(':budget_id',$collaborator->getId()->toString());
     $query->bindParam(':collaborator_id',$collaborator->getIdCollaborator()->toString());
     $query->execute();    
@@ -150,10 +173,21 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
 
   public function budgetDeleter(BudgetId $budgetId): bool {
     $connection = $this->getConnection();
-    $sql = 'UPDATE '.$this->TABLE_NAME.' SET active_budget = 0 WHERE id = :budget_id';
+    $sql = 'DELETE FROM company_budgets WHERE id = :budget_id';
     $query = $connection->prepare($sql);
     $query->bindParam(':budget_id',$budgetId->toString());
     $query->execute();    
+    
+    $sql = 'DELETE FROM collaborators WHERE budget_id = :budget_id';
+    $query2 = $connection->prepare($sql);
+    $query2->bindParam(':budget_id',$budgetId->toString());
+    $query2->execute();
+
+    $sql = 'DELETE FROM charges WHERE budget_id = :budget_id';
+    $query3 = $connection->prepare($sql);
+    $query3->bindParam(':budget_id',$budgetId->toString());
+    $query3->execute();
+
     if($query->rowCount()>0)
       return true;
     else
@@ -178,13 +212,12 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
 
     public function budgetCollaboratorAdder(Collaborator $collaborator): void {
       $connection = $this->getConnection();
-      $sql = 'INSERT INTO collaborators (collaborator_id,budget_id,collaborator_name,budget_percentage,budget_quantity) VALUES (:collaborator_id,:budget_id,:collaborator_name,:budget_percentage,:budget_quantity)';
+      $sql = 'INSERT INTO collaborators (collaborator_id,budget_id,collaborator_name,budget_percentage) VALUES (:collaborator_id,:budget_id,:collaborator_name,:budget_percentage)';
       $query = $connection->prepare($sql);
       $query->bindParam(':collaborator_id', $collaborator->getIdCollaborator()->toString());
       $query->bindParam(':budget_id', $collaborator->getId()->toString());
       $query->bindParam(':collaborator_name', $collaborator->getName()->toString());
       $query->bindParam(':budget_percentage', $collaborator->getBudgetPercentage()->toInt());
-      $query->bindParam(':budget_quantity', $collaborator->getBudgetQuantity()->toInt());
       $query->execute();
     }
 
@@ -195,6 +228,12 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
       $query->bindParam(':collaborator_id', $collaboratorId->toString());
       $query->bindParam(':budget_id', $budgetId->toString());
       $query->execute();
+
+      $sql = 'DELETE FROM charges  WHERE collaborator_id = :collaborator_id AND budget_id = :budget_id';
+      $query2 = $connection->prepare($sql);
+      $query2->bindParam(':collaborator_id', $collaboratorId->toString());
+      $query2->bindParam(':budget_id', $budgetId->toString());
+      $query2->execute();
       return true;
     }
 
@@ -212,7 +251,7 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
         $flag = true;
       return $flag;
     }
-
+    
     public function getCollaborator(BudgetId $budgetId,CollaboratorId $collaboratorId): Collaborator {
       $connection = $this->getConnection();
       $sql = 'SELECT * FROM  collaborators  WHERE collaborator_id = :collaborator_id AND budget_id = :budget_id';
@@ -222,9 +261,27 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
       $query->execute();
       $result = $query->fetchAll(\PDO::FETCH_OBJ);
       $collaborator = $result[0];
-      return new Collaborator(new CollaboratorId($collaborator->collaborator_id),new BudgetId($collaborator->budget_id),
-                              new CollaboratorName($collaborator->collaborator_name),new BudgetPercentage($collaborator->budget_percentage),
-                              new BudgetQuantity($collaborator->budget_quantity));
+      return new Collaborator(new CollaboratorId($collaborator->collaborator_id),
+                              new BudgetId($collaborator->budget_id),
+                              new CollaboratorName($collaborator->collaborator_name),
+                              new BudgetPercentage($collaborator->budget_percentage)
+                            );
+    }
+
+    public function getChargesCollaborator(BudgetId $budgetId,CollaboratorId $collaboratorId): Int {
+      $connection = $this->getConnection();
+      $sql = 'SELECT SUM(amount) AS total FROM  charges  WHERE collaborator_id = :collaborator_id AND budget_id = :budget_id';
+      $query = $connection->prepare($sql);
+      $query->bindParam(':collaborator_id', $collaboratorId->toString());
+      $query->bindParam(':budget_id', $budgetId->toString());
+      $query->execute();
+      $result = $query->fetchAll(\PDO::FETCH_OBJ);
+      $result = $result[0];
+      if($result->total==null){
+        return 0;
+      }else{
+        return $result->total;
+      }
     }
 
     public function budgetIdFinder(OwnerId $ownerId): ArrayOwnerBudgets {
@@ -284,8 +341,7 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
 
     public function budgetItemCreator(Charge $charge):void{
       $connection = $this->getConnection();
-      $sql = 'INSERT INTO charges (charge_id,collaborator_id,budget_id,title,date,time,amount) 
-              VALUES (:charge_id,:collaborator_id,:budget_id,:title,:date,:time,:amount)';
+      $sql = 'INSERT INTO charges (charge_id,collaborator_id,budget_id,title,date,time,amount) VALUES (:charge_id,:collaborator_id,:budget_id,:title,:date,:time,:amount)';
       $query = $connection->prepare($sql);
       $query->bindParam(':charge_id', $charge->getId()->toString());
       $query->bindParam(':collaborator_id', $charge->getCollaboratorId()->toString());
@@ -312,8 +368,7 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
                                   new CollaboratorId($budget->collaborator_id),
                                   new BudgetId($budget->budget_id),
                                   new CollaboratorName($budget->collaborator_name),
-                                  new BudgetPercentage($budget->budget_percentage),
-                                  new BudgetQuantity($budget->budget_quantity)
+                                  new BudgetPercentage($budget->budget_percentage)
                                 )
                            );
       }    

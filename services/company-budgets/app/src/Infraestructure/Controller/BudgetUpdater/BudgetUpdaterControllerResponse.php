@@ -33,9 +33,8 @@ class BudgetUpdaterControllerResponse extends ControllerResponse {
 
       return new JsonResponse([
         'success' => [
-          'message' => 'Budget: '
-            .$this->params->budget_id.' '
-            .' has been updated in db'
+          'budget_name'  => $payload->budget_name,
+          'budget_limit' => $payload->budget_limit
         ]
       ]);
 

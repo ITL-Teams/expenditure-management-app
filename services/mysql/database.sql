@@ -25,7 +25,6 @@ CREATE TABLE company_budgets (
     budget_name         VARCHAR(255) NOT NULL,
     budget_limit        INT NOT NULL,
     budget_percentage   INT DEFAULT 100,  
-    active_budget       BIT(1) DEFAULT 1,
     PRIMARY KEY (id)
 );
 
@@ -46,7 +45,6 @@ CREATE TABLE collaborators(
     budget_id           VARCHAR(255) NOT NULL,
     collaborator_name   VARCHAR(255) NOT NULL,
     budget_percentage   INT NOT NULL,
-    budget_quantity     INT NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 

@@ -21,39 +21,32 @@ class BudgetCollaboratorAdder {
   public function invoke(BudgetCollaboratorAdderRequest $request): Collaborator {
     /* Value Objects */
     $budgetId = new BudgetId($request->budgetId);
-    
+    $collaboratorId = new CollaboratorId($request->collaboratorId);
+    $budgetPercentage   = new BudgetPercentage($request->budgetPercentage);
+
+    /* Verificar si existe el presupuesto al que se le quiere añadir */
     $budgetExist = $this->repository->budgetFinderId($budgetId);    
     if($budgetExist==false)
       throw new \Exception('The budget does not exist '.$request->budgetId);
     
-      $collaboratorId = new CollaboratorId($request->collaboratorId);
-    $budgetPercentage = new BudgetPercentage($request->budgetPercentage);
-    /* Se obtienen cantidades a actualizar */
-    $budgetQuantities = $this->repository->getBudgetQuantities($budgetId);
+    /* Se obtiene limite y porcentage asignado de company-budgets */
+    $budgetQuantities   = $this->repository->getBudgetQuantities($budgetId);
+
+    /* Se valida que el porcentage a asignar no rebase el porcentage que tiene el presupuesto */
     $totalbudgetPercentage = $budgetQuantities->getPercentage()->toInt() - $budgetPercentage->toInt(); 
-    $budgetQuantity = ($budgetQuantities->getBudgetLimit()->toInt() * $budgetPercentage->toInt())/100;
-    $totalbudgetLimit = $budgetQuantities->getBudgetLimit()->toInt() - $budgetQuantity;
     
     if($totalbudgetPercentage < 0)
-      throw new \Exception('the percentage exceeds the budget '.$budgetPercentage->toInt());
-    
-    $budgetUpdateQuantities = new BudgetQuantities(new BudgetPercentage($totalbudgetPercentage)
-                                                    ,new BudgetLimit($totalbudgetLimit)
-                                                  );
-    $budgetUpdated = $this->repository->updatedBudgetQuantities($budgetId,$budgetUpdateQuantities);
-    if(!$budgetUpdated)
-      throw new \Exception('an error occurred while allocating the budget');
+      throw new \Exception('The percentage to be allocated exceeds the budget '.$budgetPercentage->toInt());
+
     /* Se verifica si el colaborador ya tiene un porcentage asignado de ese presupuesto */
     $searchCollaborator = $this->repository->searchCollaborator($budgetId,$collaboratorId);
     if($searchCollaborator){
         $col = $this->repository->getCollaborator($budgetId,$collaboratorId);
         $budgetUpdatePercentage = $budgetPercentage->toInt() + $col->getBudgetPercentage()->toInt();
-        $budgetUpdateQuantity = $budgetQuantity + $col->getBudgetQuantity()->toInt();
         $budgetCollaborator = new Collaborator($collaboratorId, 
                                                 $budgetId,
                                                 new CollaboratorName($request->collaboratorName),
-                                                new BudgetPercentage($budgetUpdatePercentage),
-                                                new BudgetQuantity($budgetUpdateQuantity)
+                                                new BudgetPercentage($budgetUpdatePercentage)
                                                 );
         $flag = $this->repository->budgetCollaboratorUpdated($budgetCollaborator);
         if(!$flag)
@@ -62,12 +55,16 @@ class BudgetCollaboratorAdder {
         $budgetCollaborator = new Collaborator($collaboratorId, 
                                                 $budgetId,
                                                 new CollaboratorName($request->collaboratorName),
-                                                $budgetPercentage,
-                                                new BudgetQuantity($budgetQuantity)
+                                                $budgetPercentage
                                           );
         $this->repository->budgetCollaboratorAdder($budgetCollaborator);
     }
     /* Fin de validación de colaborador*/
+
+    $budgetUpdated = $this->repository->updatedBudgetQuantities($budgetId,$totalbudgetPercentage);
+    if(!$budgetUpdated)
+      throw new \Exception('An error occurred while allocating the budget');
+
     return $budgetCollaborator;
   }
 

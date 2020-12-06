@@ -30,7 +30,7 @@ interface IBudgetRepository {
   public function budgetCollaboratorRemover(BudgetId $budgetId,CollaboratorId $collabortatorId): bool;
   public function searchBudgetCollaborator(BudgetId $budgetId,CollaboratorId $collabortatorId): bool;
   public function searchQuantitiesCollaborator(BudgetId $budgetId,CollaboratorId $collabortatorId): BudgetQuantities;
-  public function updatedBudgetQuantities(BudgetId $budgetId,BudgetQuantities $budgetQuantities): bool;
+  public function updatedBudgetQuantities(BudgetId $budgetId,Int $budgetPercentage): bool;
   public function searchCollaborator(BudgetId $budgetId,CollaboratorId $collaboratorId): bool;
   public function budgetCollaboratorUpdated(Collaborator $collaborator): bool;
   public function getCollaborator(BudgetId $budgetId,CollaboratorId $collaboratorId): Collaborator;

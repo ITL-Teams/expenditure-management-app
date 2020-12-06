@@ -23,19 +23,20 @@ class BudgetMaster {
     $budgetExist = $this->repository->budgetFinderId($budgetId);    
     if(!$budgetExist)
       throw new \Exception('The budget does not exist '.$request->budgetId); 
+    
     $budgets = $this->repository->getBudgets($budgetId);
     $ownerId = $budgets->getOwnerId()->toString();
     $budgetName = $budgets->getName()->toString();
     $budgetLimit = $budgets->getBudgetLimit()->toInt();
-    if($budgets->getBudgetPercentage()->toInt()>=50){
+    if($budgets->getBudgetPercentage()->toInt()>=25){
       $budgetStatus = "OK";
-    }else if ($budgets->getBudgetPercentage()->toInt()<=25){
-      $budgetStatus = "ALMOST_EXCEEDED";
-    }else{
+    }else {
       $budgetStatus = "EXCEEDED";
     }
     $budgetsAssigned = 100 - $budgets->getBudgetPercentage()->toInt();
+    
     $collaborators = $this->repository->getCollaborators($budgetId)->getBudgets();
+    
     $charges = $this->repository->getCharges($budgetId)->getBudgets();
     $response = new BudgetMasterResponse;
     $collaboratorsFormated = [];

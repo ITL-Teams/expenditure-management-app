@@ -16,13 +16,12 @@ class BudgetUpdater {
 
   public function invoke(BudgetUpdaterRequest $request): Budget {
     $budgetSearchBudgetId = new BudgetId($request->budgetId);
-    
     $budgetExist = $this->repository->budgetFinderId($budgetSearchBudgetId);
-    
     if($budgetExist==false)
       throw new \Exception('The budget does not exist '.$request->budgetId);
 
     $budget = new Budget(new BudgetName($request->budgetName),new BudgetLimit($request->budgetLimit),new BudgetId($request->budgetId));
+    
     $bool = $this->repository->budgetUpdater($budget);
     
     if(!$bool)

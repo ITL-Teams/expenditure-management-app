@@ -36,7 +36,7 @@ class CollaboratorIdFinderControllerResponse extends ControllerResponse {
     } catch(RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
-          'message' => 'Company budget was not updated',
+          'message' => 'Budgets not found',
           'reason' => $exeption->getMessage()
         ]
       ]);

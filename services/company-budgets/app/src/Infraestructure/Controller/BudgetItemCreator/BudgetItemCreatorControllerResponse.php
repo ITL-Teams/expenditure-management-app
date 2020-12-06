@@ -24,15 +24,15 @@ class BudgetItemCreatorControllerResponse extends ControllerResponse {
 
     try {
       $serviceRequest = new BudgetItemCreatorRequest();
-      $serviceRequest->collaboratorId = $payload->charge->collaborator_id;
+      $serviceRequest->collaboratorId = $payload->collaborator_id;
       $serviceRequest->budgetId = $this->params->budgetid;
-      $serviceRequest->title = $payload->charge->title;
-      $serviceRequest->budgetLimit = $payload->charge->amount;
+      $serviceRequest->title = $payload->title;
+      $serviceRequest->budgetLimit = $payload->amount;
       $charge = $this->service->invoke($serviceRequest);
 
       return new JsonResponse([
         'success' => [
-          'collaborator_id' => $payload->charge->collaborator_id,
+          'collaborator_id' => $payload->collaborator_id,
           'charge_id' => $charge->getId()->toString(),
           'date' => $charge->getDate()->toString(),
           'time' => $charge->getTime()->toString()

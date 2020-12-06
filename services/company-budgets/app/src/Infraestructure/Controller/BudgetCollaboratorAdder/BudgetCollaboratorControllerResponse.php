@@ -36,15 +36,14 @@ class BudgetCollaboratorControllerResponse extends ControllerResponse {
         'success' => [
           'message' => 'Collaborator: '
             .$payload->collaborator_name.' '
-            .' has been added to the budget',
-          'id' => $this->params->budgetid
+            .' has been added to the budget'
         ]
       ]);
 
     } catch(RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
-          'message' => 'Collaborator was not registered',
+          'message' => 'The collaborator was not added to the budget',
           'reason' => $exeption->getMessage()
         ]
       ]);

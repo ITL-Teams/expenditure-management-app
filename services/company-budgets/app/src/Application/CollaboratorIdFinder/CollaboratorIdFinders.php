@@ -16,18 +16,24 @@ class CollaboratorIdFinders {
   }
 
   public function invoke(CollaboratorIdFinderRequest $request): CollaboratorIdFinderResponse {
-      $budgets = $this->repository->collaboratorIdFinder(new CollaboratorId($request->collaboratorId))->getOwnerBudgets();
-      $response = new CollaboratorIdFinderResponse;
-      $budgetsFormated = [];
-      foreach($budgets as $budget) {
+      
+    $budgetExist = $this->repository->validateCollaborator(new CollaboratorId($request->collaboratorId));    
+    
+    if(!$budgetExist)
+      throw new \Exception('The collaborator does not have an allocated budget '.$request->collaborator_id);
+
+    $budgets = $this->repository->collaboratorIdFinder(new CollaboratorId($request->collaboratorId))->getOwnerBudgets();
+    $response = new CollaboratorIdFinderResponse;
+    $budgetsFormated = [];
+    foreach($budgets as $budget) {
       \array_push($budgetsFormated,[
                                       'budget_id' => $budget->getId()->toString(),
                                       'budget_name' => $budget->getName()->toString()
-                                    ]
+                                   ]
                   );
-      }
-      $response->collaboratorId = $request->collaboratorId;
-      $response->ownerBudegts = $budgetsFormated;
-      return $response;
+    }
+    $response->collaboratorId = $request->collaboratorId;
+    $response->ownerBudegts = $budgetsFormated;
+    return $response;
   }
 }

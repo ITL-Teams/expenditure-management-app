@@ -16,7 +16,13 @@ class BudgetIdFinders {
   }
 
   public function invoke(BudgetIdFinderRequest $request): BudgetIdFinderResponse {
-      $budgets = $this->repository->budgetIdFinder(new OwnerId($request->ownerId))->getOwnerBudgets();
+      $ownerId = new OwnerId($request->ownerId);
+      $validateOwner = $this->repository->validateOwner($ownerId);
+      
+      if($validateOwner==false)
+        throw new \Exception('The collaborator does not exist '.$request->ownerId);
+
+      $budgets = $this->repository->budgetIdFinder($ownerId)->getOwnerBudgets();
       $response = new BudgetIdFinderResponse;
       $budgetsFormated = [];
       foreach($budgets as $budget) {

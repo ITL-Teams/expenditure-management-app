@@ -1,7 +1,7 @@
 <?php
 namespace App\Domain\Entity;
 
-use App\Domain\ValueObject\ChargetId;
+use App\Domain\ValueObject\ChargeId;
 use App\Domain\ValueObject\BudgetId;
 use App\Domain\ValueObject\CollaboratorId;
 use App\Domain\ValueObject\Title;
@@ -11,7 +11,7 @@ use App\Domain\ValueObject\Time;
 
 
 class Charge {
-  private ChargetId $chargeId;
+  private ChargeId $chargeId;
   private BudgetId $budgetId;
   private CollaboratorId $collaboratorId;
   private Title $title;
