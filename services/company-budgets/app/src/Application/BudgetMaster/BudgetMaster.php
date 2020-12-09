@@ -42,7 +42,7 @@ class BudgetMaster {
     $collaboratorsFormated = [];
     foreach($collaborators as $collaborator) {
       \array_push($collaboratorsFormated,[
-                                      'collaborator_id' => $collaborator->getId()->toString(),
+                                      'collaborator_id' => $collaborator->getIdCollaborator()->toString(),
                                       'collaborator_name' => $collaborator->getName()->toString(),
                                       'budget_percentage' => $collaborator->getBudgetPercentage()->toInt()
                                     ]

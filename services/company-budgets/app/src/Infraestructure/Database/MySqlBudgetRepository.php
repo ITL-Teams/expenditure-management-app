@@ -22,6 +22,8 @@ use App\Domain\ValueObject\BudgetLimit;
 use App\Domain\ValueObject\BudgetPercentage;
 use App\Domain\ValueObject\BudgetQuantity;
 use App\Domain\ValueObject\Title;
+use App\Domain\ValueObject\Date;
+use App\Domain\ValueObject\Time;
 
 class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository {
   private string $TABLE_NAME = 'company_budgets';
@@ -394,7 +396,7 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
                                   new BudgetLimit($budget->amount),
                                   new Date($budget->date),
                                   new Time($budget->time),
-                                  new ChargeId($charge_id),
+                                  new ChargeId($budget->charge_id),
                                 )
                            );
       }    
