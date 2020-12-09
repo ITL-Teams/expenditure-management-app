@@ -11,7 +11,7 @@ class BudgetDeleter {
     $this->repository = $repository;
   }
 
-  public function invoke(BudgetCreatorRequest $request): bool {
+  public function invoke(BudgetDeleterRequest $request): bool {
     
     $budgetSearchId = new BudgetId($request->budgetId);
     $budgetExist = $this->repository->budgetFinderId($budgetSearchId);

@@ -26,7 +26,7 @@ class BudgetUpdaterControllerResponse extends ControllerResponse {
       $this->validatePayload($payload);
 
       $serviceRequest = new BudgetUpdaterRequest();
-      $serviceRequest->budgetId = $payload->budget_id;
+      $serviceRequest->budgetId = $this->params->budgetid;
       $serviceRequest->budgetName = $payload->budget_name;
       $serviceRequest->budgetLimit = $payload->budget_limit;
       $budget = $this->service->invoke($serviceRequest);
@@ -51,11 +51,7 @@ class BudgetUpdaterControllerResponse extends ControllerResponse {
 
   public function validatePayload(object $payload): void {    
     $this->validatePayloadBody([
-      [
-        "value_name" => 'budget_id',
-        "value" => $payload->budget_id,
-        "expected" => "string"
-      ],[
+     [
         "value_name" => 'budget_name',
         "value" => $payload->budget_name,
         "expected" => "string"

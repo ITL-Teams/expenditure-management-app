@@ -31,11 +31,15 @@ Content-Type: application/json
 }
 
 ###
-PUT  http://localhost/enterprise-budget/update
+PUT  http://localhost/enterprise-budget/update/160679190857 
 Content-Type: application/json
 
 {
-    "budget_id":"160636819390",
-    "budget_name": "Servicios Basicos 1",
-    "budget_limit": 600
+    "budget_name": "Servicios Basicos Daniel",
+    "budget_limit": 100
 }
+
+###
+
+PUT  http://localhost/enterprise-budget/delete/160679190857
+Content-Type: application/json

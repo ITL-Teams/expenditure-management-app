@@ -2,41 +2,28 @@
 
 namespace App\Domain\Entity;
 
-use App\Domain\ValueObject\AMount;
+
 use App\Domain\ValueObject\BudgetName;
-use App\Domain\ValueObject\MountMax;
-use App\Domain\ValueObject\MountTotal;
 use App\Domain\ValueObject\OwnerId;
-use App\Domain\ValueObject\PersonalBudgetId;
+use App\Domain\ValueObject\BudgetId;
 use App\Domain\ValueObject\Type;
+use App\Domain\ValueObject\AMount;
 
 
 class PersonalBudget
 {
     private AMount $amount;
     private BudgetName $budgetName;
-    private MountMax $mountMax;
-    private MountTotal $mountTotal;
     private OwnerId $ownerId;
-    private PersonalBudgetId $personalBudgetId;
+    private BudgetId $budgetId;
     private Type $type;
 
-    public function __construct(
-        AMount $amount,
-        Type $type,
-        BudgetName $budgetName,
-        MountMax $mountMax,
-        MountTotal $mountTotal,
-        OwnerId $ownerId = null,
-        PersonalBudgetId $personalBudgetId =null
-    ) {
+    public function __construct( Type $type, AMount $amount, BudgetName $budgetName, OwnerId $ownerId, BudgetId $budgetId =null) {
         $this->amount = $amount;
-        $this->type = $amount;
+        $this->type = $type;
         $this->budgetName = $budgetName;
-        $this->mountMax = $mountMax;
-        $this->mountTotal = $mountTotal;
         $this->ownerId = $ownerId;
-        $this->personalBudgetId = $personalBudgetId != null ? $personalBudgetId : new PersonalBudgetId($this->generateId());
+        $this->budgetId = $budgetId != null ? $budgetId : new BudgetId($this->generateId());
         
     }
     private function generateId(): string {
@@ -56,19 +43,9 @@ class PersonalBudget
         return $this->type;
     }
 
-    public function getBudgetName(): BudgetName
+    public function getName(): BudgetName
     {
         return $this->budgetName;
-    }
-
-    public function getMountMax(): MountMax
-    {
-        return $this->mountMax;
-    }
-
-    public function getMountTotal(): MountTotal
-    {
-        return $this->mountTotal;
     }
 
     public function getOwnerId(): OwnerId
@@ -76,8 +53,8 @@ class PersonalBudget
         return $this->ownerId;
     }
 
-    public function getPersonalBudgetId(): PersonalBudgetId
+    public function getId(): BudgetId
     {
-        return $this->personalBudgetId;
+        return $this->budgetId;
     }
 }

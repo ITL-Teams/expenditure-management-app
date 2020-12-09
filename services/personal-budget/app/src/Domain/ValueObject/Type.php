@@ -6,12 +6,12 @@ class Type {
   
   public function __construct(string $type) {
     $this->type = $type;
-    $this->ensureNameOnlyContainsLetters($name);
+    $this->ensureTypeOnlyContainsLetters($type);
   }
 
 
-  private function ensureNameOnlyContainsLetters(string $value): void {
-    if($type=="ANNUAL" || $type=="MONTHLY") return;
+  private function ensureTypeOnlyContainsLetters(string $value): void {
+      if($value=="ANNUAL" || $value=="MONTHLY") return;
       throw new \Exception($value . ' is not valid as type');
   }
 

@@ -21,6 +21,6 @@ class ApiRoutes {
 
 ApiRoutes::init();
 ApiRoutes::addRoute(['POST'], '/create', 'App\Infraestructure\Controller\BudgetCreator\BudgetCreatorController@handler');
-ApiRoutes::addRoute(['PUT'], '/update', 'App\Infraestructure\Controller\BudgetUpdater\BudgetUpdaterController@handler');
-ApiRoutes::addRoute(['\DELETE'], '/delete/{budget_id}', 'App\Infraestructure\Controller\BudgetDeleter\BudgetDeleterController@handler');
+ApiRoutes::addRoute(['PUT'], '/update/{budgetid}', 'App\Infraestructure\Controller\BudgetUpdater\BudgetUpdaterController@handler');
+ApiRoutes::addRoute(['DELETE'], '/delete/{budgetid}', 'App\Infraestructure\Controller\BudgetDeleter\BudgetDeleterController@handler');
 //ApiRoutes::addRoute(['GET'], '/get/{userId}', 'App\Infraestructure\Controller\FindUser\UserFinderController@handler');

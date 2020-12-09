@@ -29,11 +29,21 @@ CREATE TABLE company_budgets (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE charges (
-    charge_id           VARCHAR(255) NOT NULL,
-    collaborator_id     VARCHAR(255) NOT NULL, 
+CREATE TABLE personal_budgets (
+    id                  VARCHAR(255) NOT NULL,
+    owner_id            VARCHAR(255) NOT NULL,
+    budget_name         VARCHAR(255) NOT NULL,
+    type                VARCHAR(255) NOT NULL,
+    amount              INT NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE personalcharges (
+    charge_id           VARCHAR(255) NOT NULL, 
+    budget_id           VARCHAR(255) NOT NULL, 
     title               VARCHAR(255) NOT NULL,
-    charge_date         DATETIME NOT NULL,
+    date                VARCHAR(255) NOT NULL,
+    time                VARCHAR(255) NOT NULL,
     amount              INT NOT NULL,
     PRIMARY KEY (charge_id)
 );

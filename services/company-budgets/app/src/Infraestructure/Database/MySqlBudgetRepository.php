@@ -95,9 +95,9 @@ class MySqlBudgetRepository extends MySqlRepository implements IBudgetRepository
 
   public function budgetDeleter(BudgetId $budgetId): bool {
     $connection = $this->getConnection();
-    $sql = 'UPDATE '.$this->TABLE_NAME.' SET active_budget = 0 WHERE budget_id = :budget_id';
+    $sql = 'DELETE FROM'.$this->TABLE_NAME.' WHERE budget_id = :budget_id';
     $query = $connection->prepare($sql);
-    $query->bindParam(':budget_id',$Budget->getId()->toString());
+    $query->bindParam(':budget_id',$budgetId->toString());
     $query->execute();    
     if($query->rowCount()>0)
       return true;

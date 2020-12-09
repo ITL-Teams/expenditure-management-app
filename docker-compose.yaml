@@ -44,6 +44,18 @@ services:
       - ./services/company-budgets/public:/var/www/html
       - ./services/company-budgets/app:/var/www/app
 
+
+  personal-budget:
+    container_name: personal-budget
+    restart: unless-stopped
+    image: itl-teams/php:latest
+    build: ./services/personal-budget
+    env_file:
+      - ".env"
+    volumes:
+      - ./services/personal-budget/public:/var/www/html
+      - ./services/personal-budget/app:/var/www/app
+
   database:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password

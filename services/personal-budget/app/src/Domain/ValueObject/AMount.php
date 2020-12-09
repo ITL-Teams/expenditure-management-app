@@ -1,21 +1,20 @@
 <?php
 namespace App\Domain\ValueObject;
 
-class AMonth {
-  private String $month_2;
+class AMount {
+  private int $amount;
   
-  public function __construct(string $month) {
-    $this->month_2 = $month;
-    $this->ensureNameOnlyContainsNumbers($month_2);
+  public function __construct(string $amount) {
+    $this->amount = $amount;
+    $this->checkQuantity($this->amount);
   }
 
-  private function ensureNameOnlyContainsNumbers(string $value): void {
-    $valid_word = "/^([0-9])+$/";
-    if(preg_match($valid_word, $value)) return;
-      throw new \Exception($value . ' is not valid as name');
+  private function checkQuantity(int $amount): void {
+    if($amount>0) return;
+      throw new \Exception(' the amount must be greater than $0');
   }
 
   public function toInt(): int {
-    return $this->month_2;
+    return $this->amount;
   }
 }
