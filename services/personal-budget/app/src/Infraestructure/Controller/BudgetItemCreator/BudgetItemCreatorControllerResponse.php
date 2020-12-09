@@ -23,10 +23,12 @@ class BudgetItemCreatorControllerResponse extends ControllerResponse {
     $payload = $this->getPayload($request);
 
     try {
+      $this->validatePayload($payload);
+
       $serviceRequest = new BudgetItemCreatorRequest();
       $serviceRequest->budgetId = $this->params->budgetid;
-      $serviceRequest->title = $payload->title;
-      $serviceRequest->amount = $payload->amount;
+      $serviceRequest->title = $payload->charge->title;
+      $serviceRequest->amount = $payload->charge->amount;
       $charge = $this->service->invoke($serviceRequest);
 
       return new JsonResponse([
@@ -45,5 +47,25 @@ class BudgetItemCreatorControllerResponse extends ControllerResponse {
         ]
       ]);
     }
+  }
+
+  public function validatePayload(object $payload): void {  
+    $this->validatePayloadBody([
+      [
+        "value_name" => 'charge',
+        "value" => $payload->charge,
+        "expected" => "object"
+      ],
+      [
+        "value_name" => 'charge.title',
+        "value" => $payload->charge->title,
+        "expected" => "string"
+      ],
+      [
+        "value_name" => 'charge.amount',
+        "value" => $payload->charge->amount,
+        "expected" => "integer"
+      ]
+    ]);    
   }
 }

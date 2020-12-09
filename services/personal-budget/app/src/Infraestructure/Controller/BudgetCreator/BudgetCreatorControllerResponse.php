@@ -41,7 +41,7 @@ class BudgetCreatorControllerResponse extends ControllerResponse {
             .$payload->amount.' '
             .$payload->type.' '
             .' has been registered in db',
-          'id' => $budget->getId()->toString()
+          'budget_id' => $budget->getId()->toString()
         ]
       ]);
 
@@ -68,12 +68,12 @@ class BudgetCreatorControllerResponse extends ControllerResponse {
         "expected" => "string"
       ],
       [
-        "value_name" => 'amount',
+        "value_name" => 'income.amount',
         "value" => $payload->income->amount,
         "expected" => "integer"
       ],
       [
-        "value_name" => 'type',
+        "value_name" => 'income.type',
         "value" => $payload->income->type,
         "expected" => "string"
       ]

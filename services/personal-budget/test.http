@@ -1,57 +1,32 @@
-POST http://localhost/credentials/register 
-Content-Type: application/json
-
-{
-    "email": "test@gmail.com" , 
-    "firstName": "Diego",
-    "lastName": "López",
-    "password": "12345",
-    "signature": "test",
-    "enterprise_account": true
-}
-
-###
-
-POST http://localhost/credentials/login 
-Content-Type: application/json
-
-{
-    "email":"test@gmail.com",
-    "password":"12345"
-}
-
-
-
-###
 POST http://localhost/personal-budget/create
 Content-Type: application/json
 
 {
-    "budget_name": "Servicios 2",
+    "budget_name": "Servicios",
     "owner_id": "dTorresv2020",
     "income": {
-        "amount": 120000,
-        "type": "ANNUAL"
+        "amount": 10000,
+        "type": "MONTHLY"
     }
 }
 
 //Update
 ###
-PUT  http://localhost/personal-budget/update/160743844711
+PUT  http://localhost/personal-budget/update/160749448456
 Content-Type: application/json
 
 {
     "budget_name": "Servicios Torres",
     "income": {
-        "amount": 10500,
-        "type": "MONTHLY"
+        "amount": 36000,
+        "type": "ANNUAL"
     }
 }
 
 
 //budgetDeleter
 ###
-DELETE http://localhost/personal-budget/delete/160743585835
+DELETE http://localhost/personal-budget/delete/160749323848
 Content-Type: application/json
 
 
@@ -62,19 +37,21 @@ GET http://localhost/personal-budget/get/all/dTorresv2020
 
 //Crear cargo
 ###
-POST http://localhost/personal-budget/create/charge/160743844711
+POST http://localhost/personal-budget/create/charge/160749323848
 Content-Type: application/json
 
 {
-        "title": "Luz",
-        "amount": 3000   
+  "charge": {
+    "title": "LUZ",
+    "amount": 3000
+  }        
 }
 
 //Eliminar cargo
 ###
-DELETE http://localhost/personal-budget/delete/charge/160743567740
+DELETE http://localhost/personal-budget/delete/charge/160749368353
 
 
 //BudgetFinder
 ###
-GET http://localhost/personal-budget/get/160743844711
+GET http://localhost/personal-budget/get/160749323848

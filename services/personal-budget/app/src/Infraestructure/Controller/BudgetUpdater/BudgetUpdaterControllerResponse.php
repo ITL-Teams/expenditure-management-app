@@ -35,11 +35,11 @@ class BudgetUpdaterControllerResponse extends ControllerResponse {
 
       return new JsonResponse([
         'success' => [
-          'message' => 'Budget:'.$this->params->budgetid.
-            ' income: { amount:'.$payload->income->amount.
-              ' type:'.$payload->income->type.
-              ' }'
-            .' has been updated in db'
+          'budget_name' => $payload->budget_name,
+          'income' => [
+            'amount' => $payload->income->amount,
+            'type' => $payload->income->type
+          ]
         ]
       ]);
 
@@ -61,12 +61,12 @@ class BudgetUpdaterControllerResponse extends ControllerResponse {
         "expected" => "string"
       ],
       [
-        "value_name" => 'amount',
+        "value_name" => 'income.amount',
         "value" => $payload->income->amount,
         "expected" => "integer"
       ],
       [
-        "value_name" => 'type',
+        "value_name" => 'income.type',
         "value" => $payload->income->type,
         "expected" => "string"
       ]
