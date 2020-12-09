@@ -19,6 +19,35 @@ CREATE TABLE user_credentials (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE company_budgets (
+    id                  VARCHAR(255) NOT NULL,
+    owner_id            VARCHAR(255) NOT NULL,
+    budget_name         VARCHAR(255) NOT NULL,
+    budget_limit        INT NOT NULL,
+    budget_percentage   INT DEFAULT 100,  
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE charges (
+    charge_id           VARCHAR(255) NOT NULL,
+    collaborator_id     VARCHAR(255) NOT NULL, 
+    budget_id           VARCHAR(255) NOT NULL, 
+    title               VARCHAR(255) NOT NULL,
+    date                VARCHAR(255) NOT NULL,
+    time                VARCHAR(255) NOT NULL,
+    amount              INT NOT NULL,
+    PRIMARY KEY (charge_id)
+);
+
+CREATE TABLE collaborators(
+    id                  INT AUTO_INCREMENT,
+    collaborator_id     VARCHAR(255) NOT NULL,
+    budget_id           VARCHAR(255) NOT NULL,
+    collaborator_name   VARCHAR(255) NOT NULL,
+    budget_percentage   INT NOT NULL,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE agreement (
     id                  VARCHAR(255) NOT NULL,
     account_id          VARCHAR(255) NOT NULL,
@@ -26,7 +55,6 @@ CREATE TABLE agreement (
     client_name         VARCHAR(255) NOT NULL,
     agreement_message   VARCHAR(2500) NOT NULL,
     agreement_signature VARCHAR(255) NOT NULL,
-
     PRIMARY KEY (id)
 );
 
