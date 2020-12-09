@@ -33,9 +33,8 @@ class BudgetUpdaterControllerResponse extends ControllerResponse {
 
       return new JsonResponse([
         'success' => [
-          'message' => 'Budget: '
-            .$payload->budget_id.' '
-            .' has been updated in db'
+          'budget_name'  => $payload->budget_name,
+          'budget_limit' => $payload->budget_limit
         ]
       ]);
 
@@ -51,7 +50,7 @@ class BudgetUpdaterControllerResponse extends ControllerResponse {
 
   public function validatePayload(object $payload): void {    
     $this->validatePayloadBody([
-     [
+      [
         "value_name" => 'budget_name',
         "value" => $payload->budget_name,
         "expected" => "string"

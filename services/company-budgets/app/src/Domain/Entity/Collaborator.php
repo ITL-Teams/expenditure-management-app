@@ -13,12 +13,11 @@ class Collaborator {
   private BudgetPercentage $budgetPercentage;
 
   public function __construct(CollaboratorId $collaboratorId,BudgetId $budgetId,
-                                CollaboratorName $CollaboratorName,BudgetPercentage $budgetPercentage) {
+                                CollaboratorName $collaboratorName,BudgetPercentage $budgetPercentage) {
     $this->collaboratorId = $collaboratorId;
     $this->budgetId = $budgetId;
-    $this->CollaboratorName = $collaboratorName;
+    $this->collaboratorName = $collaboratorName;
     $this->budgetPercentage = $budgetPercentage;
-    
   }
     
   public function getIdCollaborator(): CollaboratorId {

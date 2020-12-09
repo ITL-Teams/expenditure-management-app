@@ -12,7 +12,7 @@ use App\Application\BudgetCollaboratorAdder\BudgetCollaboratorAdderRequest;
 use App\Domain\IBudgetRepository;
 
 class BudgetCollaboratorControllerResponse extends ControllerResponse {  
-  private BudgetCreator $service;
+  private BudgetCollaboratorAdder $service;
 
   public function init(IBudgetRepository $repository): void {
     $this->service = new BudgetCollaboratorAdder($repository);
@@ -27,7 +27,7 @@ class BudgetCollaboratorControllerResponse extends ControllerResponse {
 
       $serviceRequest = new BudgetCollaboratorAdderRequest();
       $serviceRequest->collaboratorId = $payload->collaborator_id;
-      $serviceRequest->budgetId = $payload->budget_id;
+      $serviceRequest->budgetId = $this->params->budgetid;
       $serviceRequest->collaboratorName = $payload->collaborator_name;
       $serviceRequest->budgetPercentage = $payload->budget_percentage;
       $budget = $this->service->invoke($serviceRequest);
@@ -36,15 +36,14 @@ class BudgetCollaboratorControllerResponse extends ControllerResponse {
         'success' => [
           'message' => 'Collaborator: '
             .$payload->collaborator_name.' '
-            .' has been added to the budget',
-          'id' => $budget->getId()->toString()
+            .' has been added to the budget'
         ]
       ]);
 
     } catch(RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
-          'message' => 'Company budget was not registered',
+          'message' => 'The collaborator was not added to the budget',
           'reason' => $exeption->getMessage()
         ]
       ]);
@@ -56,11 +55,6 @@ class BudgetCollaboratorControllerResponse extends ControllerResponse {
       [
         "value_name" => 'collaborator_id',
         "value" => $payload->collaborator_id,
-        "expected" => "string"
-      ],
-      [
-        "value_name" => 'budget_id',
-        "value" => $payload->budget_id,
         "expected" => "string"
       ],
       [

@@ -1,21 +1,21 @@
 <?php
 namespace App\Domain\ValueObject;
 
-class CollaboratorName {
-  private string $name;
+class Title {
+  private string $title;
   
-  public function __construct(string $name) {
-    $this->name = $name;
-    $this->ensureNameOnlyContainsLettersAndNumbers($name);
+  public function __construct(string $title) {
+    $this->title = $title;
+    $this->ensureNameOnlyContainsLettersAndNumbers($title);
   }
 
   private function ensureNameOnlyContainsLettersAndNumbers(string $value): void {
-    $valid_word = "/^([a-zA-Z\s'])+$/";
+    $valid_word = "/^([0-9a-zA-Z\s'])+$/";
     if(\preg_match($valid_word, $value)) return;
       throw new \Exception($value . ' is not valid as name');
   }
 
   public function toString(): string {
-    return trim($this->name);
+    return trim($this->title);
   }
 }

@@ -25,8 +25,18 @@ CREATE TABLE company_budgets (
     budget_name         VARCHAR(255) NOT NULL,
     budget_limit        INT NOT NULL,
     budget_percentage   INT DEFAULT 100,  
-    active_budget       BIT(1) DEFAULT 1,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE charges (
+    charge_id           VARCHAR(255) NOT NULL,
+    collaborator_id     VARCHAR(255) NOT NULL, 
+    budget_id           VARCHAR(255) NOT NULL, 
+    title               VARCHAR(255) NOT NULL,
+    date                VARCHAR(255) NOT NULL,
+    time                VARCHAR(255) NOT NULL,
+    amount              INT NOT NULL,
+    PRIMARY KEY (charge_id)
 );
 
 CREATE TABLE personal_budgets (
@@ -49,12 +59,12 @@ CREATE TABLE personalcharges (
 );
 
 CREATE TABLE collaborators(
+    id                  INT AUTO_INCREMENT,
     collaborator_id     VARCHAR(255) NOT NULL,
     budget_id           VARCHAR(255) NOT NULL,
     collaborator_name   VARCHAR(255) NOT NULL,
     budget_percentage   INT NOT NULL,
-    budget_assigned     INT(1) DEFAULT 1,
-    PRIMARY KEY (collaborator_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE agreement (
@@ -62,7 +72,7 @@ CREATE TABLE agreement (
     account_id          VARCHAR(255) NOT NULL,
     budget_id           VARCHAR(255) NOT NULL,
     client_name         VARCHAR(255) NOT NULL,
-    agreement_message   VARCHAR(255) DEFAULT NULL,
+    agreement_message   VARCHAR(2500) NOT NULL,
     agreement_signature VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );

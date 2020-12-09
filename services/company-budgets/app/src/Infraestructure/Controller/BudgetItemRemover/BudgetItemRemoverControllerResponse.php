@@ -1,5 +1,5 @@
 <?php
-namespace App\Infraestructure\Controller\BudgetDeleter;
+namespace App\Infraestructure\Controller\BudgetItemRemover;
 
 use \Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -7,37 +7,34 @@ use Psr\Http\Message\RequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use App\Infraestructure\Controller\ControllerResponse;
 use App\Infraestructure\Controller\Exception\RequestException;
-use App\Application\BudgetDeleter\BudgetDeleter;
-use App\Application\BudgetDeleter\BudgetDeleterRequest;
+use App\Application\BudgetItemRemover\BudgetItemRemover;
+use App\Application\BudgetItemRemover\BudgetItemRemoverRequest;
 use App\Domain\IBudgetRepository;
 
-class BudgetDeleterControllerResponse extends ControllerResponse {  
-  private BudgetDeleter $service;
+class BudgetItemRemoverControllerResponse extends ControllerResponse {  
+  private BudgetItemRemover $service;
 
   public function init(IBudgetRepository $repository): void {
-    $this->service = new BudgetDeleter($repository);
+    $this->service = new BudgetItemRemover($repository);
   }
 
   public function toResponse(RequestInterface $request): ResponseInterface
   {      
-    
     try {
-      $serviceRequest = new BudgetDeleterRequest();
-      $serviceRequest->budgetId = $this->params->budgetid;
-      $budget = $this->service->invoke($serviceRequest);
+      $serviceRequest = new BudgetItemRemoverRequest();
+      $serviceRequest->chargeId = $this->params->chargeid;
+      $charge = $this->service->invoke($serviceRequest);
 
       return new JsonResponse([
         'success' => [
-          'message' => 'Budget: '
-            .$this->params->budgetid.' '
-            .' has been deleted in db'
+          'message' => "The charge was properly removed ".$this->params->chargeid
         ]
       ]);
 
     } catch(RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
-          'message' => 'Company budget was not deleted',
+          'message' => 'The charge was not eliminated',
           'reason' => $exeption->getMessage()
         ]
       ]);

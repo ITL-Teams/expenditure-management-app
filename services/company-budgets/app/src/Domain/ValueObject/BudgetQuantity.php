@@ -1,7 +1,7 @@
 <?php
 namespace App\Domain\ValueObject;
 
-class BudgetPercentage {
+class BudgetQuantity {
   private int $amount;
   
   public function __construct(string $amount) {
@@ -10,8 +10,8 @@ class BudgetPercentage {
   }
 
   private function checkQuantity(int $amount): void {
-    if($amount>0 && $amount <101) return;
-      throw new \Exception(' the percentage must be greater than 0 and less than 100 ');
+    if($amount>0) return;
+      throw new \Exception(' the amount must be greater than $0');
   }
 
   public function toInt(): int {

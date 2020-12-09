@@ -1,5 +1,5 @@
 <?php
-namespace App\Infraestructure\Controller\BudgetDeleter;
+namespace App\Infraestructure\Controller\BudgetCollaboratorRemover;
 
 use \Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -7,37 +7,37 @@ use Psr\Http\Message\RequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use App\Infraestructure\Controller\ControllerResponse;
 use App\Infraestructure\Controller\Exception\RequestException;
-use App\Application\BudgetDeleter\BudgetDeleter;
-use App\Application\BudgetDeleter\BudgetDeleterRequest;
+use App\Application\BudgetCollaboratorRemover\BudgetCollaboratorRemover;
+use App\Application\BudgetCollaboratorRemover\BudgetCollaboratorRemoverRequest;
 use App\Domain\IBudgetRepository;
 
-class BudgetDeleterControllerResponse extends ControllerResponse {  
-  private BudgetDeleter $service;
+class BudgetCollaboratorRemoverControllerResponse extends ControllerResponse {  
+  private BudgetCollaboratorRemover $service;
 
   public function init(IBudgetRepository $repository): void {
-    $this->service = new BudgetDeleter($repository);
+    $this->service = new BudgetCollaboratorRemover($repository);
   }
 
   public function toResponse(RequestInterface $request): ResponseInterface
   {      
-    
     try {
-      $serviceRequest = new BudgetDeleterRequest();
+      $serviceRequest = new BudgetCollaboratorRemoverRequest();
+      $serviceRequest->collaboratorId = $this->params->collaboratorid;
       $serviceRequest->budgetId = $this->params->budgetid;
       $budget = $this->service->invoke($serviceRequest);
 
       return new JsonResponse([
         'success' => [
-          'message' => 'Budget: '
-            .$this->params->budgetid.' '
-            .' has been deleted in db'
+          'message' => 'Collaborator: '
+            .$this->params->collaboratorid.' '
+            .' has been removed to the budget'
         ]
       ]);
 
     } catch(RequestException | Exception $exeption) {
       return new JsonResponse([
         'error' => [
-          'message' => 'Company budget was not deleted',
+          'message' => 'Collaborator not removed from the budget',
           'reason' => $exeption->getMessage()
         ]
       ]);
