@@ -39,6 +39,25 @@ CREATE TABLE charges (
     PRIMARY KEY (charge_id)
 );
 
+CREATE TABLE personal_budgets (
+    id                  VARCHAR(255) NOT NULL,
+    owner_id            VARCHAR(255) NOT NULL,
+    budget_name         VARCHAR(255) NOT NULL,
+    type                VARCHAR(255) NOT NULL,
+    amount              INT NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE personalcharges (
+    charge_id           VARCHAR(255) NOT NULL, 
+    budget_id           VARCHAR(255) NOT NULL, 
+    title               VARCHAR(255) NOT NULL,
+    date                VARCHAR(255) NOT NULL,
+    time                VARCHAR(255) NOT NULL,
+    amount              INT NOT NULL,
+    PRIMARY KEY (charge_id)
+);
+
 CREATE TABLE collaborators(
     id                  INT AUTO_INCREMENT,
     collaborator_id     VARCHAR(255) NOT NULL,

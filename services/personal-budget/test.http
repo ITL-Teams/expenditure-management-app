@@ -1,0 +1,57 @@
+POST http://localhost/personal-budget/create
+Content-Type: application/json
+
+{
+    "budget_name": "Servicios",
+    "owner_id": "dTorresv2020",
+    "income": {
+        "amount": 10000,
+        "type": "MONTHLY"
+    }
+}
+
+//Update
+###
+PUT  http://localhost/personal-budget/update/160749448456
+Content-Type: application/json
+
+{
+    "budget_name": "Servicios Torres",
+    "income": {
+        "amount": 36000,
+        "type": "ANNUAL"
+    }
+}
+
+
+//budgetDeleter
+###
+DELETE http://localhost/personal-budget/delete/160749323848
+Content-Type: application/json
+
+
+//Idfinder
+###
+GET http://localhost/personal-budget/get/all/dTorresv2020
+
+
+//Crear cargo
+###
+POST http://localhost/personal-budget/create/charge/160749323848
+Content-Type: application/json
+
+{
+  "charge": {
+    "title": "LUZ",
+    "amount": 3000
+  }        
+}
+
+//Eliminar cargo
+###
+DELETE http://localhost/personal-budget/delete/charge/160749368353
+
+
+//BudgetFinder
+###
+GET http://localhost/personal-budget/get/160749323848
